@@ -1,0 +1,15 @@
+
+PG_HOST = '127.0.0.1'
+PG_PORT = 5432
+PG_DBNAME = 'postgres'
+PG_USER = 'postgres'
+PG_PASSWORD = ''
+
+NEO4J_URI = 'bolt://127.0.0.1:7687'
+NEO4J_USER = 'neo4j'
+NEO4J_PASSWORD = ''
+
+ARANGO_URL = 'http://127.0.0.1:8529'
+ARANGO_USER = 'root'
+ARANGO_PASSWORD = ''
+ARANGO_DBNAME = ''
