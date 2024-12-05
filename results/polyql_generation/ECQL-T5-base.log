@@ -1,0 +1,2005 @@
+QL: ECQL ecql
+Fold: 1
+-------------------- 97 1 ------------------------------------------------------------
+What company produced the movie " Juno " ?
+
+[GT] SELECT company.name FROM company WHERE company.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Juno'
+  } RETURN company.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT company.name FROM company WHERE company.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Juno' } RETURN company.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 98 2 ------------------------------------------------------------
+Find all actors who were born in 1984
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_year = 1984
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_year = 1984
+Match Status: [FIRST LF] [NO]
+-------------------- 99 3 ------------------------------------------------------------
+Who are the actors born in " New York City " after 1990 ?
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1990
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1990
+Match Status: [FIRST LF] [NO]
+-------------------- 100 4 ------------------------------------------------------------
+Find all movies about Autism
+
+[GT] SELECT movie.title FROM movie WHERE movie.keyword @> '["autism"]'
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.keyword @> '["autism"]'
+Match Status: [FIRST LF] [NO]
+-------------------- 101 5 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct before 2010 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year < 2010
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > 2010
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > 2010
+} RETURN COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+} AND movie.id = { SELECT movie.id FROM movie WHERE movie.release_year < 2010 AND COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > 2010
+} AND COUNT (*) AS cnt RETURN cnt
+> CANDIDATE 0: MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > 2010 } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [NO] [NO]
+-------------------- 102 6 ------------------------------------------------------------
+Find all comedies produced in year 2015
+
+[GT] SELECT movie.title FROM movie WHERE movie.genre @> '["Comedy"]' AND movie.release_year = 2015
+[0] SELECT movie.title FROM movie WHERE movie.release_year = 2015
+[0] SELECT movie.title FROM movie WHERE movie.release_year scan 2015
+[0] SELECT movie.title FROM movie WHERE movie.release_year COLLECTION 2015
+[0] SELECT movie.title FROM movie WHERE movie.release_year JSONB 2015
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.release_year = 2015
+Match Status: [NO] [NO]
+-------------------- 103 7 ------------------------------------------------------------
+which movie has the most number of actors from China ?
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.nationality = 'China'
+  } WITH movie.id AS movie_id, COUNT (actor) AS cnt RETURN movie_id ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year AS 1
+[0] SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year DESC 1
+[0] SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year < 1
+[0] SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year COUNT 1
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year AS 1
+> CANDIDATE 1: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year DESC 1
+> CANDIDATE 2: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year < 1
+> CANDIDATE 3: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH movie.id AS movie.release_year COUNT 1
+Match Status: [NO] [NO]
+-------------------- 104 8 ------------------------------------------------------------
+When was " Kevin Spacey " born ?
+
+[GT] SELECT actor.birth_year FROM actor WHERE actor.name = 'Kevin Spacey'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.birth_year FROM actor WHERE actor.name = 'Kevin Spacey'
+Match Status: [FIRST LF] [NO]
+-------------------- 105 9 ------------------------------------------------------------
+Find all movies featuring " Kate Winslet "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kate Winslet'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kate Winslet' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 106 10 ------------------------------------------------------------
+Give me the name of all the actors from Afghanistan
+
+[GT] SELECT actor.name FROM actor WHERE actor.nationality = 'Afghanistan'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.nationality = 'Afghanistan'
+Match Status: [FIRST LF] [NO]
+-------------------- 107 11 ------------------------------------------------------------
+Find all movies directed by " Steven Spielberg " after 2006
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Steven Spielberg'
+  } RETURN movie.id
+} AND movie.release_year > 2006
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg' } RETURN movie.id } AND movie.release_year > 2006
+Match Status: [FIRST LF] [NO]
+-------------------- 108 12 ------------------------------------------------------------
+Who is directed the latest movie by " NBC Universal "
+
+[GT] SELECT director.name FROM director, movie, {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'NBC Universal'
+  } RETURN director.id AS director_id, movie.id AS movie_id
+} AS graph WHERE director.id = graph.director_id AND movie.id = graph.movie_id ORDER BY movie.release_year DESC LIMIT 1
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal'
+  } RETURN director.id
+} ORDER BY movie.release_year DESC LIMIT 1
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal'
+  } RETURN director.id
+} ORDER BY movie.release_year LIMIT LIMIT 1
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal'
+  } RETURN director.id
+} ORDER BY movie.release_year AND LIMIT 1
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal'
+  } RETURN director.id
+} ORDER BY movie.release_year DESC DESC 1
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal' } RETURN director.id } ORDER BY movie.release_year DESC LIMIT 1
+> CANDIDATE 1: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal' } RETURN director.id } ORDER BY movie.release_year LIMIT LIMIT 1
+> CANDIDATE 2: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal' } RETURN director.id } ORDER BY movie.release_year AND LIMIT 1
+> CANDIDATE 3: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'NBC Universal' } RETURN director.id } ORDER BY movie.release_year DESC DESC 1
+Match Status: [NO] [NO]
+-------------------- 109 13 ------------------------------------------------------------
+find the number of actors from Iran who played in " Jim Jarmusch " movies
+
+[GT] SELECT COUNT (*) AS cnt FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } RETURN actor.id
+} AND actor.nationality = 'Iran'
+[0] SELECT COUNT (*) AS cnt FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Jarmusch'
+  } RETURN actor.id
+} AND actor.nationality = 'Iran'
+[0] SELECT COUNT (*) AS cnt FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Jarmusch'
+  } WITH actor.id
+} AND actor.nationality = 'Iran'
+[0] SELECT COUNT (*) AS cnt FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Jarmusch'
+  } RETURN actor.id
+} RETURN actor.nationality = 'Iran'
+[0] SELECT AS (*) AS cnt FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Jarmusch'
+  } RETURN actor.id
+} AND actor.nationality = 'Iran'
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Jim Jarmusch' } RETURN actor.id } AND actor.nationality = 'Iran'
+Match Status: [FIRST EX] [NO]
+-------------------- 110 14 ------------------------------------------------------------
+Who directed the movie " Inglourious Basterds " ?
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Inglourious Basterds'
+  } RETURN director.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Inglourious Basterds' } RETURN director.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 111 15 ------------------------------------------------------------
+How many movies were produced in the year 2012 ?
+
+[GT] SELECT COUNT (movie.title) AS cnt FROM movie WHERE movie.release_year = 2012
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE release_year = 2012
+[0] SELECT COUNT (movie.title) AS cnt FROM movie WHERE release_year = 2012
+[0] SELECT AS (*) AS cnt FROM movie WHERE release_year = 2012
+[0] SELECT COUNT (*) COUNT cnt FROM movie WHERE release_year = 2012
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE release_year = 2012
+Match Status: [FIRST EX] [NO]
+-------------------- 112 16 ------------------------------------------------------------
+Find all movies written by " Matt Damon "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:WrittenBy]->(writer:Writer) WHERE writer.id = {
+    SELECT writer.id FROM writer WHERE writer.name = 'Matt Damon'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:WrittenBy]->(writer:Writer) WHERE writer.id = { SELECT writer.id FROM writer WHERE writer.name = 'Matt Damon' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 113 17 ------------------------------------------------------------
+Find all movies that star both " Angelina Jolie " and " Brad Pitt "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Angelina Jolie' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = { SELECT actor.id FROM actor WHERE actor.name = 'Angelina Jolie' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 114 18 ------------------------------------------------------------
+What is the maximum number of movies in which " Brad Pitt " act in a given year ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} GROUP BY movie.release_year ORDER BY cnt DESC LIMIT 1
+[0] SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} AND BY movie.release_year
+[0] SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} AS BY movie.release_year
+[0] SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} COUNT BY movie.release_year
+[0] SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} RETURN BY movie.release_year
+> CANDIDATE 0: SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } AND BY movie.release_year
+> CANDIDATE 1: SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } AS BY movie.release_year
+> CANDIDATE 2: SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } COUNT BY movie.release_year
+> CANDIDATE 3: SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } RETURN BY movie.release_year
+Match Status: [NO] [NO]
+-------------------- 115 19 ------------------------------------------------------------
+Find the actors who played in the latest movie by " Quentin Tarantino "
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.id = {
+      MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+        SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+      } RETURN movie.id
+    } ORDER BY movie.release_year DESC LIMIT 1
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN actor.id
+} ORDER BY movie.release_year DESC LIMIT 1
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Quentin Tarantino'
+  } RETURN actor.id
+} ORDER BY movie.release_year DESC LIMIT 1
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN actor.id
+} ORDER BY movie.release_year LIMIT LIMIT 1
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Quentin Tarantino'
+  } RETURN actor.id
+} ORDER BY movie.release_year LIMIT LIMIT 1
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN actor.id } ORDER BY movie.release_year DESC LIMIT 1
+> CANDIDATE 1: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Quentin Tarantino' } RETURN actor.id } ORDER BY movie.release_year DESC LIMIT 1
+> CANDIDATE 2: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN actor.id } ORDER BY movie.release_year LIMIT LIMIT 1
+> CANDIDATE 3: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Quentin Tarantino' } RETURN actor.id } ORDER BY movie.release_year LIMIT LIMIT 1
+Match Status: [NO] [NO]
+-------------------- 116 20 ------------------------------------------------------------
+Find all movies produced in 2015
+
+[GT] SELECT movie.title FROM movie WHERE movie.release_year = 2015
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.release_year = 2015
+Match Status: [FIRST LF] [NO]
+-------------------- 117 21 ------------------------------------------------------------
+What is the number of movies featuring " Brad Pitt " ?
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 118 22 ------------------------------------------------------------
+How many movies did " Alfred Hitchcock " direct ?
+
+[GT] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Alfred Hitchcock'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Alfred Hitchcock' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 119 23 ------------------------------------------------------------
+Which movie had the character " Daffy Duck "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Daffy Duck' RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Daffy Duck'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Daffy Duck'
+  } WITH movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Daffy Duck'
+  } AND movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Daffy Duck'
+  } LIMIT movie.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Daffy Duck' } RETURN movie.id }
+Match Status: [NO] [NO]
+-------------------- 120 24 ------------------------------------------------------------
+Find the directors of all movies featuring " Kate Winslet "
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kate Winslet'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kate Winslet'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kevin Winslet'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kathleen Winslet'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kathry Winslet'
+  } RETURN director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kate Winslet' } RETURN director.id }
+> CANDIDATE 1: SELECT director.name FROM director WHERE director.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kevin Winslet' } RETURN director.id }
+> CANDIDATE 2: SELECT director.name FROM director WHERE director.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kathleen Winslet' } RETURN director.id }
+> CANDIDATE 3: SELECT director.name FROM director WHERE director.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kathry Winslet' } RETURN director.id }
+Match Status: [NO] [NO]
+-------------------- 121 25 ------------------------------------------------------------
+Find all actors who acted in the same movie as " Tom Hanks "
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Tom Hanks'
+  } RETURN actor_2.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Tom Hanks'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Tom Hanks'
+  } WITH actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Tom Hanks'
+  } AND actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Tom Hanks'
+  } LIMIT actor.id
+}
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Tom Hanks' } RETURN actor.id }
+Match Status: [NO] [NO]
+-------------------- 122 26 ------------------------------------------------------------
+Find all movies about Iraq war
+
+[GT] SELECT movie.title FROM movie WHERE movie.keyword @> '["iraq-war"]'
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.keyword @> '["iraq-war"]'
+Match Status: [FIRST LF] [NO]
+-------------------- 123 27 ------------------------------------------------------------
+How many actors were born in " Los Angeles " after 2000 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 2000
+[CORRECT]
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 2000
+Match Status: [FIRST LF] [NO]
+-------------------- 124 28 ------------------------------------------------------------
+Find all movies produced by Netflix
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'Netflix'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' WITH movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' AND movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' LIMIT movie.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' RETURN movie.id }
+> CANDIDATE 1: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' WITH movie.id }
+> CANDIDATE 2: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' AND movie.id }
+> CANDIDATE 3: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' LIMIT movie.id }
+Match Status: [NO] [NO]
+-------------------- 125 29 ------------------------------------------------------------
+Where is the birth place of " Kevin Spacey "
+
+[GT] SELECT actor.birth_city FROM actor WHERE actor.name = 'Kevin Spacey'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.birth_city FROM actor WHERE actor.name = 'Kevin Spacey'
+Match Status: [FIRST LF] [NO]
+-------------------- 126 30 ------------------------------------------------------------
+Find all actors from Italy
+
+[GT] SELECT actor.name FROM actor WHERE actor.nationality = 'Italy'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.nationality = 'Italy'
+Match Status: [FIRST LF] [NO]
+-------------------- 127 31 ------------------------------------------------------------
+Find the actor who played " Captain Miller " in the movie " Saving Private Ryan "
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Captain Miller' AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Captain Miller' AND movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+
+LF: 19 / 31 (0.6129), EX: 21 / 31 (0.6774)
+Fold: 2
+-------------------- 1 32 ------------------------------------------------------------
+Find all tv series produced by Netflix
+
+[GT] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'Netflix'
+  } RETURN tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' RETURN tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (tv_series:TvSeries)-[r:MadeBy]->(producer:Producer) WHERE producer.id = { SELECT producer.id FROM producer WHERE producer.name = 'Netflix' RETURN tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' AND tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' WITH tv_series.id
+}
+> CANDIDATE 0: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' RETURN tv_series.id }
+> CANDIDATE 1: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (tv_series:TvSeries)-[r:MadeBy]->(producer:Producer) WHERE producer.id = { SELECT producer.id FROM producer WHERE producer.name = 'Netflix' RETURN tv_series.id }
+> CANDIDATE 2: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' AND tv_series.id }
+> CANDIDATE 3: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' WITH tv_series.id }
+Match Status: [NO] [NO]
+-------------------- 2 33 ------------------------------------------------------------
+What is the number of movies produced in 2013 ?
+
+[GT] SELECT COUNT (movie.title) AS cnt FROM movie WHERE release_year = 2013
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year = 2013
+[0] SELECT COUNT (movie.title) AS cnt FROM movie WHERE movie.release_year = 2013
+[0] SELECT AS (*) AS cnt FROM movie WHERE movie.release_year = 2013
+[0] SELECT COUNT (*) COUNT cnt FROM movie WHERE movie.release_year = 2013
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year = 2013
+Match Status: [FIRST EX] [NO]
+-------------------- 3 34 ------------------------------------------------------------
+Find the actor with most number of films
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WITH actor.id AS actor_id, COUNT (movie) AS cnt RETURN actor_id ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > LIMIT actor.id AS actor_id, COUNT (movie:Movie) AS cnt RETURN actor_id ORDER BY cnt LIMIT 1
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > WITH actor.id AS actor_id, COUNT (movie:Movie) AS cnt RETURN actor_id ORDER BY cnt LIMIT 1
+}
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year ORDER BY cnt DESC LIMIT 1 }
+> CANDIDATE 1: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > LIMIT actor.id AS actor_id, COUNT (movie:Movie) AS cnt RETURN actor_id ORDER BY cnt LIMIT 1 }
+> CANDIDATE 2: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year ORDER BY cnt DESC LIMIT 1 }
+> CANDIDATE 3: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > WITH actor.id AS actor_id, COUNT (movie:Movie) AS cnt RETURN actor_id ORDER BY cnt LIMIT 1 }
+Match Status: [NO] [NO]
+-------------------- 4 35 ------------------------------------------------------------
+Find all movies that were produced by Netflix
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'Netflix'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' AND movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' WITH movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' LIMIT movie.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' RETURN movie.id }
+> CANDIDATE 1: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' AND movie.id }
+> CANDIDATE 2: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' WITH movie.id }
+> CANDIDATE 3: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Netflix' LIMIT movie.id }
+Match Status: [NO] [NO]
+-------------------- 5 36 ------------------------------------------------------------
+How many movies about Persians were released after 1990 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year > 1990 AND movie.keyword @> '["Persians"]'
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.keyword @> '["persians"]' AND movie.release_year > 1990
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.keyword @> '["persians"]' RETURN movie.release_year > 1990
+[0] SELECT AS (*) AS cnt FROM movie WHERE movie.keyword @> '["persians"]' AND movie.release_year > 1990
+[0] SELECT COUNT (*) COUNT cnt FROM movie WHERE movie.keyword @> '["persians"]' AND movie.release_year > 1990
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.keyword @> '["persians"]' AND movie.release_year > 1990
+Match Status: [FIRST EX] [NO]
+-------------------- 6 37 ------------------------------------------------------------
+Find all the female actors in the movie " Saving Private Ryan "
+
+[GT] SELECT actor.name FROM actor WHERE actor.gender = 'female' AND actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.gender = 'female' AND movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.gender = 'female' RETURN movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.gender = 'female' AND movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+  } WITH actor.id
+}
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan' } RETURN actor.id }
+Match Status: [NO] [NO]
+-------------------- 7 38 ------------------------------------------------------------
+Find all actors from Canada who acted in " James Bond " movies
+
+[GT] SELECT actor.name FROM actor WHERE actor.nationality = 'Canada' AND actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'James Bond'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Bond'
+  } RETURN actor.id
+} AND actor.nationality = 'Canada'
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Bond'
+  } RETURN actor.id
+} RETURN actor.nationality = 'Canada'
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Bond'
+  } RETURN actor.id
+} COUNT actor.nationality = 'Canada'
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Jim Bond'
+  } RETURN actor.id
+} DESC actor.nationality = 'Canada'
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Jim Bond' } RETURN actor.id } AND actor.nationality = 'Canada'
+Match Status: [FIRST EX] [NO]
+-------------------- 8 39 ------------------------------------------------------------
+Find all actors who are from Canada
+
+[GT] SELECT actor.name FROM actor WHERE actor.nationality = 'Canada'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.nationality = 'Canada'
+Match Status: [FIRST LF] [NO]
+-------------------- 9 40 ------------------------------------------------------------
+Which movies did " Alfred Hitchcock " direct ?
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Alfred Hitchcock'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Alfred Hitchcock' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 10 41 ------------------------------------------------------------
+How many movies did " Humphrey Bogart " act in before 1942 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year < 1942 AND movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Humphrey Bogart'
+  } RETURN movie.id
+}
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Humphrey Bogart'
+  } RETURN movie.id
+} AND movie.release_year < 1942
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Humphrey Bogart'
+  } RETURN movie.id
+} AND movie.release_year DESC 1942
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Humphrey Bogart'
+  } RETURN movie.id
+} AND movie.release_year AND 1942
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Humphrey Bogart'
+  } RETURN movie.id
+} AND movie.release_year LIMIT 1942
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Humphrey Bogart' } RETURN movie.id } AND movie.release_year < 1942
+Match Status: [FIRST EX] [NO]
+-------------------- 11 42 ------------------------------------------------------------
+How many movies did " Shahab Hosseini " act in
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Shahab Hosseini'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Shahab Hosseini' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 12 43 ------------------------------------------------------------
+What is the genre of the movie " Jurassic Park " ?
+
+[GT] SELECT JSONB_ARRAY_ELEMENTS(movie.genre) AS genre FROM movie WHERE movie.title = 'Jurassic Park'
+[0] SELECT JSONB ____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+[0] SELECT JSONB __________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+[1] SELECT JSONB _ARRAY_ELEMENTS(movie.genre) AS genre FROM movie WHERE movie.title = 'Jurassic Park'
+[0] SELECT JSONB _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+> CANDIDATE 0: SELECT JSONB ____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+> CANDIDATE 1: SELECT JSONB __________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+> CANDIDATE 2: SELECT JSONB _ARRAY_ELEMENTS(movie.genre) AS genre FROM movie WHERE movie.title = 'Jurassic Park'
+Match Status: [GUIDE LF] [NO]
+-------------------- 13 44 ------------------------------------------------------------
+What is the number of movies that " Brad Pitt " acts in per year ?
+
+[GT] SELECT movie.release_year, COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} GROUP BY movie.release_year
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} AND BY movie.release_year ORDER BY cnt DESC LIMIT 1
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} AS BY movie.release_year ORDER BY cnt DESC LIMIT 1
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} GROUP BY movie.release_year ORDER BY cnt DESC LIMIT 1
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt'
+  } RETURN movie.id
+} COUNT BY movie.release_year ORDER BY cnt DESC LIMIT 1
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } AND BY movie.release_year ORDER BY cnt DESC LIMIT 1
+> CANDIDATE 1: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } AS BY movie.release_year ORDER BY cnt DESC LIMIT 1
+> CANDIDATE 2: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Brad Pitt' } RETURN movie.id } GROUP BY movie.release_year ORDER BY cnt DESC LIMIT 1
+Match Status: [NO] [NO]
+-------------------- 14 45 ------------------------------------------------------------
+Find the movie which is classified in the most number of genres
+
+[GT] SELECT movie.title FROM movie WHERE movie.genre IS NOT NULL ORDER BY JSONB_ARRAY_LENGTH(movie.genre) DESC LIMIT 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = '["genre"]'
+  } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt LIMIT 1
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.genre @> '["genre"]'
+  } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt LIMIT 1
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Movie'
+  } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.genre @> '["genre"]'
+  } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt DESC 1
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = '["genre"]' } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt LIMIT 1 }
+> CANDIDATE 1: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.genre @> '["genre"]' } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt LIMIT 1 }
+> CANDIDATE 2: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Movie' } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt DESC LIMIT 1 }
+> CANDIDATE 3: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.genre @> '["genre"]' } WITH movie.id AS movie_id, COUNT (genre) AS cnt RETURN movie_id ORDER BY cnt DESC 1 }
+Match Status: [NO] [NO]
+-------------------- 15 46 ------------------------------------------------------------
+In what city was " Kevin Spacey " born ?
+
+[GT] SELECT actor.birth_city FROM actor WHERE actor.name = 'Kevin Spacey'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.birth_city FROM actor WHERE actor.name = 'Kevin Spacey'
+Match Status: [FIRST LF] [NO]
+-------------------- 16 47 ------------------------------------------------------------
+List " James Bond " directors
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'James Bond'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Bond'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Bond'
+  } WITH director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Bond'
+  } AND director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Bond'
+  } LIMIT director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Jim Bond' } RETURN director.id }
+Match Status: [NO] [NO]
+-------------------- 17 48 ------------------------------------------------------------
+List all the Sci-Fi movies which released in 2010
+
+[GT] SELECT movie.title FROM movie WHERE movie.release_year = 2010 AND movie.genre @> '["Sci-Fi"]'
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Sci-Fi'
+  } RETURN movie.id
+} AND movie.release_year = 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Sci-Fi'
+  } RETURN movie.release_year = 2010
+} RETURN movie.release_year = 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Scientific-Fiction'
+  } RETURN movie.id
+} AND movie.release_year = 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.release_year = 2010
+  } RETURN movie.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Sci-Fi' } RETURN movie.id } AND movie.release_year = 2010
+Match Status: [NO] [NO]
+-------------------- 18 49 ------------------------------------------------------------
+Find all movies produced by company " Walt Disney " after 2010
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'Walt Disney'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'Walt Disney' } RETURN movie.id } AND movie.release_year > 2010
+Match Status: [FIRST LF] [NO]
+-------------------- 19 50 ------------------------------------------------------------
+What is the number of actors in the movie " Grumpier Old Men " ?
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Grumpier Old Men'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Grumpier Old Men' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 20 51 ------------------------------------------------------------
+List all the movies directed by " Asghar Farhadi " in which " Taraneh Alidoosti " played
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Taraneh Alidoosti' } AND director.id = { SELECT director.id FROM director WHERE director.name = 'Asghar Farhadi'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Taraneh Alidoosti' } AND director.id = { SELECT director.id FROM director WHERE director.name = 'Asghar Farhadi' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 21 52 ------------------------------------------------------------
+What are the movies related to nuclear weapons
+
+[GT] SELECT movie.title FROM movie WHERE movie.keyword @> '["nuclear-weapons"]'
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.keyword @> '["nuclear-weapons"]'
+Match Status: [FIRST LF] [NO]
+-------------------- 22 53 ------------------------------------------------------------
+Find all the female actors from Austin
+
+[GT] SELECT actor.name FROM actor WHERE actor.gender = 'female' AND actor.birth_city = 'Austin'
+[0] SELECT actor.name FROM actor WHERE actor.gender = 'female' AND actor.city = 'Austin'
+[1] SELECT actor.name FROM actor WHERE actor.gender = 'female' AND actor.birth_city = 'Austin'
+[0] SELECT actor.name FROM actor WHERE actor.gender = 'female' RETURN actor.city = 'Austin'
+[0] SELECT actor.name FROM actor WHERE actor.gender = 'female' COUNT actor.city = 'Austin'
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.gender = 'female' AND actor.city = 'Austin'
+> CANDIDATE 1: SELECT actor.name FROM actor WHERE actor.gender = 'female' AND actor.birth_city = 'Austin'
+Match Status: [GUIDE LF] [NO]
+-------------------- 23 54 ------------------------------------------------------------
+Who was the actor that played " Vinny Gambini " in the movie " My Cousin Vinny " ?
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Vinny Gambini' AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'My Cousin Vinny'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Vinny Gambini' AND movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'My Cousin Vinny' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 24 55 ------------------------------------------------------------
+Find all the female actors born in " New York City " after 1980
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.gender = 'female'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' RETURN actor.gender = 'female'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' DESC actor.gender = 'female'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' WITH actor.gender = 'female'
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.gender = 'female'
+Match Status: [NO] [NO]
+-------------------- 25 56 ------------------------------------------------------------
+What are the series featuring " Kerry Washington " ?
+
+[GT] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kerry Washington'
+  } RETURN tv_series.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kerry Washington' } RETURN tv_series.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 26 57 ------------------------------------------------------------
+Who is the writer of the movie " Django Unchained "
+
+[GT] SELECT writer.name FROM writer WHERE writer.id = {
+  MATCH (movie:Movie)-[r:WrittenBy]->(writer:Writer) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Django Unchained'
+  } RETURN writer.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT writer.name FROM writer WHERE writer.id = { MATCH (movie:Movie)-[r:WrittenBy]->(writer:Writer) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Django Unchained' } RETURN writer.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 27 58 ------------------------------------------------------------
+Find all movies featuring " Jason Robards " and " Woody Strode "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Jason Robards' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Woody Strode'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = { SELECT actor.id FROM actor WHERE actor.name = 'Jason Robards' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Woody Strode' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 28 59 ------------------------------------------------------------
+Who is the director of the tv series " House of Cards " from 2013 ?
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (tv_series:TvSeries)-[r:DirectedBy]->(director:Director) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' AND tv_series.release_year = 2013
+  } RETURN director.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (tv_series:TvSeries)-[r:DirectedBy]->(director:Director) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' AND tv_series.release_year = 2013 } RETURN director.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 29 60 ------------------------------------------------------------
+What is the nationality of " Kevin Spacey " ?
+
+[GT] SELECT actor.nationality FROM actor WHERE actor.name = 'Kevin Spacey'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.nationality FROM actor WHERE actor.name = 'Kevin Spacey'
+Match Status: [FIRST LF] [NO]
+-------------------- 30 61 ------------------------------------------------------------
+Find all the directors who are from Afghanistan
+
+[GT] SELECT director.name FROM director WHERE director.nationality = 'Afghanistan'
+[CORRECT]
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.nationality = 'Afghanistan'
+Match Status: [FIRST LF] [NO]
+-------------------- 31 62 ------------------------------------------------------------
+How much was the budget of " Finding Nemo "
+
+[GT] SELECT movie.budget FROM movie WHERE movie.title = 'Finding Nemo'
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Find Nemo'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Find Nemo'
+} RETURN COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Setting Nemo'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Funny Nemo'
+} RETURN COUNT (*) AS cnt RETURN cnt
+> CANDIDATE 0: MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Find Nemo' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [NO] [NO]
+
+LF: 17 / 31 (0.5484), EX: 21 / 31 (0.6774)
+Fold: 3
+-------------------- 32 63 ------------------------------------------------------------
+In what year was " Benedict Cumberbatch " born
+
+[GT] SELECT actor.birth_year FROM actor WHERE actor.name = 'Benedict Cumberbatch'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.birth_year FROM actor WHERE actor.name = 'Benedict Cumberbatch'
+Match Status: [FIRST LF] [NO]
+-------------------- 33 64 ------------------------------------------------------------
+How many movies are there that are directed by " Steven Spielberg " and featuring " Matt Damon " ?
+
+[GT] MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.id = { MATCH (movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg'
+  } RETURN movie.id
+}
+[0] MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.id = { MATCH (movie)-[:DirectedBy]->(director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg'
+  } RETURN movie.id
+}
+[0] MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.id = { MATCH (movie'
+  } RETURN movie.id
+}
+[0] MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = {
+    SELECT movie.id FROM movie WHERE director.name = 'Steven Spielberg'
+  } RETURN movie.id
+}
+> CANDIDATE 0: MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.id = { MATCH (movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg' } RETURN movie.id }
+> CANDIDATE 1: MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.id = { MATCH (movie)-[:DirectedBy]->(director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg' } RETURN movie.id }
+> CANDIDATE 2: MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.id = { MATCH (movie' } RETURN movie.id }
+> CANDIDATE 3: MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND movie.id = { SELECT movie.id FROM movie WHERE director.name = 'Steven Spielberg' } RETURN movie.id }
+Match Status: [NO] [NO]
+-------------------- 34 65 ------------------------------------------------------------
+Find the actors who played in the movie " Camp X-Ray "
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Camp X-Ray'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Camp X-Ray' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 35 66 ------------------------------------------------------------
+Find all movies about Persians
+
+[GT] SELECT movie.title FROM movie WHERE movie.keyword @> '["persians"]'
+[0] SELECT movie.title FROM movie WHERE movie.keyword @> '["Persians"]'
+[0] SELECT movie.title FROM movie WHERE movie.keyword JSONB '["Persians"]'
+[0] SELECT movie.title FROM movie WHERE movie.keyword desc '["Persians"]'
+[0] SELECT movie.title FROM movie WHERE movie.keyword MAX '["Persians"]'
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.keyword @> '["Persians"]'
+Match Status: [FIRST EX] [NO]
+-------------------- 36 67 ------------------------------------------------------------
+What are all the tv series created by " Shonda Rhimes " ?
+
+[GT] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (tv_series:TvSeries)-[r:MadeBy]->(producer:Producer) WHERE producer.id = {
+    SELECT producer.id FROM producer WHERE producer.name = 'Shonda Rhimes'
+  } RETURN tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Shonda Rhimes'
+  } RETURN tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Shonda Rhimes'
+  } WITH tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Shonda Rhimes'
+  } AND tv_series.id
+}
+[0] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Shonda Rhimes'
+  } DESC tv_series.id
+}
+> CANDIDATE 0: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Shonda Rhimes' } RETURN tv_series.id }
+Match Status: [NO] [NO]
+-------------------- 37 68 ------------------------------------------------------------
+Which producer has worked with the most number of directors ?
+
+[GT] SELECT producer.name FROM producer WHERE producer.id = {
+  MATCH (movie:Movie)-[:MadeBy]->(producer:Producer), (movie:Movie)-[:DirectedBy]->(director:Director) WITH producer.id AS producer_id, COUNT (director) AS cnt RETURN producer_id ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT producer.name FROM producer WHERE producer.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.nationality = '[r:DirectedBy]'
+  } WITH producer.id AS producer_id, COUNT (*) AS cnt RETURN producer_id ORDER BY cnt DESC LIMIT 1
+}
+[0] SELECT producer.name FROM producer WHERE producer.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.nationality = 'cnt RETURN producer_id'
+} WITH producer_id, COUNT (movie) AS cnt
+[0] SELECT producer.name FROM producer WHERE producer.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = '[r:DirectedBy]->(director:Director) WHERE director.id = {
+      SELECT director.id FROM director WHERE director.name = 'Actor' } RETURN producer.id
+    } ORDER BY director.release_year DESC LIMIT 1
+  } RETURN producer.id
+}
+[0] SELECT producer.name FROM producer WHERE producer.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = '[r:DirectedBy]->(director:Director) WHERE director.id = {
+      SELECT director.id FROM director WHERE director.name = 'Actor' } RETURN producer.id
+    } ORDER BY SELECT producer.id FROM director WHERE director.name = 'Actor'
+  } RETURN producer.id
+}
+> CANDIDATE 0: SELECT producer.name FROM producer WHERE producer.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.nationality = '[r:DirectedBy]' } WITH producer.id AS producer_id, COUNT (*) AS cnt RETURN producer_id ORDER BY cnt DESC LIMIT 1 }
+> CANDIDATE 1: SELECT producer.name FROM producer WHERE producer.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.nationality = 'cnt RETURN producer_id' } WITH producer_id, COUNT (movie) AS cnt
+> CANDIDATE 2: SELECT producer.name FROM producer WHERE producer.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = '[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Actor' } RETURN producer.id } ORDER BY director.release_year DESC LIMIT 1 } RETURN producer.id }
+> CANDIDATE 3: SELECT producer.name FROM producer WHERE producer.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = '[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Actor' } RETURN producer.id } ORDER BY SELECT producer.id FROM director WHERE director.name = 'Actor' } RETURN producer.id }
+Match Status: [NO] [NO]
+-------------------- 38 69 ------------------------------------------------------------
+find all films in which " Rowan Atkinson " acted as " Mr. Bean "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Rowan Atkinson'
+  } AND r.role = 'Mr. Bean' RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Rodan Atkinson'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Rowan Atkinson'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Rodan Atkinson' AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Mr. Bean'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Rowan Atkinson'
+  } RETURN movie.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Rodan Atkinson' } RETURN movie.id }
+Match Status: [NO] [NO]
+-------------------- 39 70 ------------------------------------------------------------
+Who acted " John Nash " in the movie " A Beautiful Mind " ?
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'John Nash' AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'A Beautiful Mind'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'John Nash' AND movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'A Beautiful Mind' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 40 71 ------------------------------------------------------------
+How many movies did " Steven Spielberg " direct ?
+
+[GT] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Steven Spielberg'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Steven Spielberg' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 41 72 ------------------------------------------------------------
+where is the director of " The Past " from
+
+[GT] SELECT director.birth_city FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Past'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Past'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Past'
+  } WITH director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Past'
+  } AND director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Past'
+  } LIMIT director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'The Past' } RETURN director.id }
+Match Status: [NO] [NO]
+-------------------- 42 73 ------------------------------------------------------------
+What are all the movies featuring " Kerry Washington " ?
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kerry Washington'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kerry Washington' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 43 74 ------------------------------------------------------------
+Find all movies produced by producer " Walt Disney " after 2010
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:MadeBy]->(producer:Producer) WHERE producer.id = {
+    SELECT producer.id FROM producer WHERE producer.name = 'Walt Disney'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE producer.id = {
+    SELECT producer.id FROM producer WHERE producer.name = 'Walt Disney'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT producer.id FROM producer WHERE producer.name = 'Walt Disney'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(producer:Producer) WHERE producer.id = {
+    SELECT producer.id FROM producer WHERE producer.name = 'Walt Disney'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM producer WHERE producer.name = 'Walt Disney'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE producer.id = { SELECT producer.id FROM producer WHERE producer.name = 'Walt Disney' } RETURN movie.id } AND movie.release_year > 2010
+> CANDIDATE 1: SELECT movie.title FROM movie WHERE movie.id = { MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = { SELECT producer.id FROM producer WHERE producer.name = 'Walt Disney' } RETURN movie.id } AND movie.release_year > 2010
+Match Status: [GUIDE EX] [NO]
+-------------------- 44 75 ------------------------------------------------------------
+What is the number of movies in which " Tom Cruise " acted ?
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Tom Cruise'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Tom Cruise' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 45 76 ------------------------------------------------------------
+How many companies participated in producing " Camp X-Ray "
+
+[GT] MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Camp X-Ray'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Camp X-Ray' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 46 77 ------------------------------------------------------------
+which company funded the " Mickey Mouse " series
+
+[GT] SELECT company.name FROM company WHERE company.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'Mickey Mouse'
+  } RETURN company.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT company.name FROM company WHERE company.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'Mickey Mouse' } RETURN company.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 47 78 ------------------------------------------------------------
+Find all actors born in " Los Angeles " after 1980
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 AND actor.nationality = 'New York'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 AND actor.name = 'Milan'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 AND actor.nationality = 'Austin'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 AND actor.nationality = 'Italy'
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 AND actor.nationality = 'New York'
+Match Status: [NO] [NO]
+-------------------- 48 79 ------------------------------------------------------------
+Who acted in the most number of movies directed by " Jim Jarmusch "
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } WITH actor.id AS actor_id, COUNT (movie) AS cnt RETURN actor_id ORDER BY cnt LIMIT 1
+}
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AND graph WHERE director.name = 'Jim Jarmusch'
+  } RETURN movie.id
+}
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AND actor.nationality = 'Jim Jarmusch'
+  } RETURN movie.id
+}
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AS graph WHERE director.name = 'Jim Jarmusch'
+  } RETURN movie.id
+}
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AND actor.nationality = 'Jim Jarmusch'
+  } AND movie.id
+}
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AND graph WHERE director.name = 'Jim Jarmusch' } RETURN movie.id }
+> CANDIDATE 1: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AND actor.nationality = 'Jim Jarmusch' } RETURN movie.id }
+> CANDIDATE 2: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AS graph WHERE director.name = 'Jim Jarmusch' } RETURN movie.id }
+> CANDIDATE 3: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id } AND actor.nationality = 'Jim Jarmusch' } AND movie.id }
+Match Status: [NO] [NO]
+-------------------- 49 80 ------------------------------------------------------------
+How many movies did " Ronald Reagan " act in ?
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+  SELECT actor.id FROM actor WHERE actor.name = 'Ronald Reagan'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Ronald Reagan' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 50 81 ------------------------------------------------------------
+Find all movies featuring both " Matt Damon " and " Ben Affleck "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Ben Affleck'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = { SELECT actor.id FROM actor WHERE actor.name = 'Matt Damon' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Ben Affleck' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 51 82 ------------------------------------------------------------
+List all the directors of movies about nuclear weapons
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.keyword @> '["nuclear-weapons"]'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.keyword @> '["nuclear-weapons"
+  } RETURN director.id
+}
+[1] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.keyword @> '["nuclear-weapons"]'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.keyword @> '["nuclear-weapons"
+  } WITH director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = '["nuclear-weapons"
+  } RETURN director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.keyword @> '["nuclear-weapons" } RETURN director.id }
+> CANDIDATE 1: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.keyword @> '["nuclear-weapons"]' } RETURN director.id }
+Match Status: [GUIDE LF] [NO]
+-------------------- 52 83 ------------------------------------------------------------
+How many actors are in the movie " Saving Private Ryan " ?
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Saving Private Ryan' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 53 84 ------------------------------------------------------------
+Find all actors who were born in " New York City " in 1984
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year = 1984
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year = 1984
+Match Status: [FIRST LF] [NO]
+-------------------- 54 85 ------------------------------------------------------------
+Who is the writer of " The Truman Show "
+
+[GT] SELECT writer.name FROM writer WHERE writer.id = {
+  MATCH (movie:Movie)-[r:WrittenBy]->(writer:Writer) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Truman Show'
+  } RETURN writer.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT writer.name FROM writer WHERE writer.id = { MATCH (movie:Movie)-[r:WrittenBy]->(writer:Writer) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'The Truman Show' } RETURN writer.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 55 86 ------------------------------------------------------------
+Who acts as " Alan Turing " in the movie " The Imitation Game " ?
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Alan Turing' AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Imitation Game'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Alan Turing' AND movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'The Imitation Game' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 56 87 ------------------------------------------------------------
+Find all movies in which " Robin Wright " appears
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Robin Wright'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Robin Wright' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 57 88 ------------------------------------------------------------
+what are the genres of movies directed by " Asghar Farhadi "
+
+[GT] SELECT JSONB_ARRAY_ELEMENTS(movie.genre) AS genre FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Asghar Farhadi'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT JSONB _ARRAY_ELEMENTS(movie.genre) AS genre FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Asghar Farhadi' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 58 89 ------------------------------------------------------------
+Who is the director of the movie " Catch Me If You Can " ?
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Catch Me If You Can'
+  } RETURN director.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Catch Me If You Can' } RETURN director.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 59 90 ------------------------------------------------------------
+What is the nationality of the actress " Ellen Page " ?
+
+[GT] SELECT actor.nationality FROM actor WHERE actor.name = 'Ellen Page'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.nationality FROM actor WHERE actor.name = 'Ellen Page'
+Match Status: [FIRST LF] [NO]
+-------------------- 60 91 ------------------------------------------------------------
+Who was the director of the movie " Joy " from 2015 ?
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Joy' AND movie.release_year = 2015
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Joy'minte AND movie.release_year = 2015
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Joy'minte AND movie.release_year = 2015
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Joy' ochi AND movie.release_year = 2015
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Joy'minte AND movie.release_year = 2015 { SELECT movie.id FROM movie WHERE movie.release_year = 2015
+  } RETURN director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Joy'minte AND movie.release_year = 2015
+> CANDIDATE 1: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Joy'minte AND movie.release_year = 2015 } RETURN director.id }
+> CANDIDATE 2: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Joy' ochi AND movie.release_year = 2015
+> CANDIDATE 3: SELECT director.name FROM director WHERE director.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Joy'minte AND movie.release_year = 2015 { SELECT movie.id FROM movie WHERE movie.release_year = 2015 } RETURN director.id }
+Match Status: [NO] [NO]
+-------------------- 61 92 ------------------------------------------------------------
+How many movies did Netflix produce ?
+
+[GT] MATCH (company:Company)-[r:Copyright]->(movie:Movie) WHERE company.id = {
+  SELECT company.id FROM company WHERE company.name = 'Netflix'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT producer.id FROM producer WHERE producer.name = 'Netflix'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Netflix'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM producer WHERE producer.name = 'Netflix'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE producer.id = {
+  SELECT producer.id FROM producer WHERE producer.name = 'Netflix'
+} WITH COUNT (*) AS cnt RETURN cnt
+> CANDIDATE 0: MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT producer.id FROM producer WHERE producer.name = 'Netflix' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [NO] [NO]
+-------------------- 62 93 ------------------------------------------------------------
+What year was the movie " The Imitation Game " produced
+
+[GT] SELECT movie.release_year FROM movie WHERE movie.title = 'The Imitation Game'
+[CORRECT]
+> CANDIDATE 0: SELECT movie.release_year FROM movie WHERE movie.title = 'The Imitation Game'
+Match Status: [FIRST LF] [NO]
+
+LF: 20 / 31 (0.6452), EX: 22 / 31 (0.7097)
+Fold: 4
+-------------------- 63 94 ------------------------------------------------------------
+How many movies about Iraq war were produced in 2015 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.keyword @> '["iraq-war"]' AND movie.release_year = 2015
+[0] SELECT COUNT (movie.title) AS cnt FROM movie WHERE movie.keyword @> '["iraq-war"]'
+[0] SELECT COUNT (movie.title) AS cnt FROM movie WHERE movie.release_year = 2015
+[0] SELECT COUNT (movie.title) AS cnt FROM movie WHERE movie.keyword @> '["Iraq-War"]'
+[0] SELECT AS (movie.title) AS cnt FROM movie WHERE movie.release_year = 2015
+> CANDIDATE 0: SELECT COUNT (movie.title) AS cnt FROM movie WHERE movie.keyword @> '["iraq-war"]'
+Match Status: [NO] [NO]
+-------------------- 64 95 ------------------------------------------------------------
+What are the major roles in the movie " Daddy Long Legs "
+
+[GT] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Daddy Long Legs'
+} RETURN r.role
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Daddy Long Legs'
+  } RETURN actor.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Daddy Long Legs' RETURN actor.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Daddy Long Legs'
+  } RETURN movie.id
+}
+[0] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Daddy Long Legs'
+  } WITH actor.id
+}
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Daddy Long Legs' } RETURN actor.id }
+Match Status: [NO] [NO]
+-------------------- 65 96 ------------------------------------------------------------
+What was the budget of the movie Juno from 2007 ?
+
+[GT] SELECT movie.budget FROM movie WHERE movie.title = 'Juno' AND movie.release_year = 2007
+[CORRECT]
+> CANDIDATE 0: SELECT movie.budget FROM movie WHERE movie.title = 'Juno' AND movie.release_year = 2007
+Match Status: [FIRST LF] [NO]
+-------------------- 66 97 ------------------------------------------------------------
+What is the latest movie by " Jim Jarmusch "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } RETURN movie.id
+} ORDER BY movie.release_year DESC LIMIT 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } RETURN movie.id AS movie_id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } RETURN movie.id AS movie_id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:MadeBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } RETURN movie.id AS movie_id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch'
+  } WITH movie.id AS movie_id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Jim Jarmusch' } RETURN movie.id AS movie_id }
+Match Status: [NO] [NO]
+-------------------- 67 98 ------------------------------------------------------------
+Find all actors born in Milan
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'Milan'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'Milan'
+Match Status: [FIRST LF] [NO]
+-------------------- 68 99 ------------------------------------------------------------
+Find the name and budget of the latest movie by " Quentin Tarantino "
+
+[GT] SELECT movie.title, movie.budget FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} ORDER BY movie.release_year LIMIT 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year > 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AS movie.release_year > 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} COUNT movie.release_year > 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year > 5 years
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (movie:Movie)-[:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year > 1
+Match Status: [NO] [NO]
+-------------------- 69 100 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct after 2010 ?
+
+[GT] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } AND movie.id = { SELECT movie.id FROM movie WHERE movie.release_year > 2010
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year AND 2010
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year < 2010
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year DESC 2010
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year RETURN 2010
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year AND 2010
+> CANDIDATE 1: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year < 2010
+Match Status: [NO] [NO]
+-------------------- 70 101 ------------------------------------------------------------
+What year was " Ellen Page " born ?
+
+[GT] SELECT actor.birth_year FROM actor WHERE actor.name = 'Ellen Page'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.birth_year FROM actor WHERE actor.name = 'Ellen Page'
+Match Status: [FIRST LF] [NO]
+-------------------- 71 102 ------------------------------------------------------------
+How many movies did " Matt Damon " direct ?
+
+[GT] MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+  SELECT director.id FROM director WHERE director.name = 'Matt Damon'
+} WITH COUNT (*) AS cnt RETURN cnt
+[CORRECT]
+> CANDIDATE 0: MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Matt Damon' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [FIRST LF] [NO]
+-------------------- 72 103 ------------------------------------------------------------
+Find all movies featuring " Kevin Spacey "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Kevin Spacey'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Kevin Spacey' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 73 104 ------------------------------------------------------------
+Find the latest movie which " Gabriele Ferzetti " acted in
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Gabriele Ferzetti'
+  } RETURN movie.id
+} ORDER BY movie.release_year DESC LIMIT 1
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Gabriel Ferzetti'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Gabriele Ferzetti'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Gabriele Ferzetti'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Gabel Ferzetti'
+  } RETURN movie.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Gabriel Ferzetti' } RETURN movie.id }
+Match Status: [NO] [NO]
+-------------------- 74 105 ------------------------------------------------------------
+Find all actors from Italy born after 1980
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 AND actor.nationality = 'Italy'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'Italy' AND actor.birth_year > 1980
+[1] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 AND actor.nationality = 'Italy'
+[0] SELECT actor.name FROM actor WHERE actor.birth_city = 'Italy' RETURN actor.birth_year > 1980
+[0] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 RETURN actor.nationality = 'Italy'
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'Italy' AND actor.birth_year > 1980
+Match Status: [NO] [NO]
+-------------------- 75 106 ------------------------------------------------------------
+Find all movies directed by " Woody Allen " and featuring " Scarlett Johansson "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Scarlett Johansson' } AND director.id = { SELECT director.id FROM director WHERE director.name = 'Woody Allen'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Scarlett Johansson' } AND director.id = { SELECT director.id FROM director WHERE director.name = 'Woody Allen' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 76 107 ------------------------------------------------------------
+What is the nationality of the actor " Christoph Waltz " ?
+
+[GT] SELECT actor.nationality FROM actor WHERE actor.name = 'Christoph Waltz'
+[0] SELECT actor.nationality FROM actor WHERE actor.name = 'Chris Waltz'
+[0] SELECT actor.nationality FROM actor WHERE actor.name = 'Cast Waltz'
+[1] SELECT actor.nationality FROM actor WHERE actor.name = 'Christoph Waltz'
+[0] SELECT actor.nationality FROM actor WHERE actor.name = 'Cassius Waltz'
+> CANDIDATE 0: SELECT actor.nationality FROM actor WHERE actor.name = 'Chris Waltz'
+Match Status: [NO] [NO]
+-------------------- 77 108 ------------------------------------------------------------
+Find all actors from Austin born after 1980
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'Austin' AND actor.birth_year > 1980
+[0] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 AND actor.birth_year > 1980
+[0] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 AND actor.birth_city = 'Austin'
+[0] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 RETURN actor.birth_year > 1980
+[0] SELECT actor.name FROM actor WHERE actor.birth_year > 1980 DESC actor.birth_year > 1980
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_year > 1980 AND actor.birth_year > 1980
+Match Status: [NO] [NO]
+-------------------- 78 109 ------------------------------------------------------------
+Find all movies featuring " Benedict Cumberbatch " and " Keira Knightley "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Benedict Cumberbatch' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Keira Knightley'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) WHERE actor_1.id = { SELECT actor.id FROM actor WHERE actor.name = 'Benedict Cumberbatch' } AND actor_2.id = { SELECT actor.id FROM actor WHERE actor.name = 'Keira Knightley' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 79 110 ------------------------------------------------------------
+Find all actors born in " Los Angeles "
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'Los Angeles'
+Match Status: [FIRST LF] [NO]
+-------------------- 80 111 ------------------------------------------------------------
+In what year was " Kevin Spacey " born ?
+
+[GT] SELECT actor.birth_year FROM actor WHERE actor.name = 'Kevin Spacey'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.birth_year FROM actor WHERE actor.name = 'Kevin Spacey'
+Match Status: [FIRST LF] [NO]
+-------------------- 81 112 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct after 2002 and before 2010 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year < 2010 AND movie.release_year > 2002
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year AND 2002
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year AND 2002 AND movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year AND 2010
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year < 2002 AND movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year AND 2010
+[0] SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year AND 2002 AND movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+} AND movie.release_year < 2010
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year AND 2002
+> CANDIDATE 1: SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year AND 2002 AND movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year AND 2010
+> CANDIDATE 2: SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year < 2002 AND movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year AND 2010
+> CANDIDATE 3: SELECT COUNT (*) AS cnt FROM movie WHERE movie.release_year AND 2002 AND movie.id = { MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino' } RETURN movie.id } AND movie.release_year < 2010
+Match Status: [NO] [NO]
+-------------------- 82 113 ------------------------------------------------------------
+What are all the movies directed by " Quentin Tarantino " featuring " Christoph Waltz " ?
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Christoph Waltz' } AND director.id = { SELECT director.id FROM director WHERE director.name = 'Quentin Tarantino'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Cast'
+  } RETURN director.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Cassius Waltz'
+  } RETURN director.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Chris Waltz'
+  } RETURN director.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Cast'
+  } AND director.id
+}
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Cast' } RETURN director.id }
+Match Status: [NO] [NO]
+-------------------- 83 114 ------------------------------------------------------------
+List all male directors who worked with the " NBC Universal " company
+
+[GT] SELECT director.name FROM director WHERE director.gender = 'male' AND director.id = {
+  MATCH (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'NBC Universal'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (company:Company)-[:Copyright]->(movie:Movie), (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'NBC Universal'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.gender = 'female' AND director.id = {
+  MATCH (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'NBC Universal'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'NBC Universal'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.gender = 'female' AND director.id = {
+  MATCH (company:Company)-[:Copyright]->(movie:Movie), (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = {
+    SELECT company.id FROM company WHERE company.name = 'NBC Universal' } RETURN director.id
+  } AND director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (company:Company)-[:Copyright]->(movie:Movie), (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'NBC Universal' } RETURN director.id }
+> CANDIDATE 1: SELECT director.name FROM director WHERE director.gender = 'female' AND director.id = { MATCH (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'NBC Universal' } RETURN director.id }
+> CANDIDATE 2: SELECT director.name FROM director WHERE director.id = { MATCH (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'NBC Universal' } RETURN director.id }
+> CANDIDATE 3: SELECT director.name FROM director WHERE director.gender = 'female' AND director.id = { MATCH (company:Company)-[:Copyright]->(movie:Movie), (company:Company)-[:Copyright]->(movie:Movie) WHERE company.id = { SELECT company.id FROM company WHERE company.name = 'NBC Universal' } RETURN director.id } AND director.id }
+Match Status: [NO] [NO]
+-------------------- 84 115 ------------------------------------------------------------
+What company produced the series Scandal ?
+
+[GT] SELECT company.name FROM company WHERE company.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'Scandal'
+  } RETURN company.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT company.name FROM company WHERE company.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'Scandal' } RETURN company.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 85 116 ------------------------------------------------------------
+Who is the actor playing " Alan Turing " in " The Imitation Game " ?
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Alan Turing' AND movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'The Imitation Game'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Alan Turing' AND movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'The Imitation Game' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 86 117 ------------------------------------------------------------
+What is the number of movies in which " Jennifer Aniston " acted after 2010 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Jennifer Aniston'
+  } RETURN movie.id
+} AND movie.release_year > 2010
+[CORRECT]
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Jennifer Aniston' } RETURN movie.id } AND movie.release_year > 2010
+Match Status: [FIRST LF] [NO]
+-------------------- 87 118 ------------------------------------------------------------
+Which actors were born in Tehran
+
+[GT] SELECT actor.name FROM actor WHERE actor.birth_city = 'Tehran'
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.birth_city = 'Tehran'
+Match Status: [FIRST LF] [NO]
+-------------------- 88 119 ------------------------------------------------------------
+who acted the role of " Mr. Bean "
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Mr. Bean' RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE r.role = 'Mr. Bean' RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 89 120 ------------------------------------------------------------
+Find all movies featuring " Benedict Cumberbatch "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Benedict Cumberbatch'
+  } RETURN movie.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.id = { MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Benedict Cumberbatch' } RETURN movie.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 90 121 ------------------------------------------------------------
+Who acts " Olivia Pope " in the series Scandal ?
+
+[GT] SELECT actor.name FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE r.role = 'Olivia Pope' AND tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'Scandal'
+  } RETURN actor.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT actor.name FROM actor WHERE actor.id = { MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE r.role = 'Olivia Pope' AND tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'Scandal' } RETURN actor.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 91 122 ------------------------------------------------------------
+What are the series in which " Scott Foley " is an actor ?
+
+[GT] SELECT tv_series.title FROM tv_series WHERE tv_series.id = {
+  MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = {
+    SELECT actor.id FROM actor WHERE actor.name = 'Scott Foley'
+  } RETURN tv_series.id
+}
+[CORRECT]
+> CANDIDATE 0: SELECT tv_series.title FROM tv_series WHERE tv_series.id = { MATCH (actor:Actor)-[r:Cast]->(tv_series:TvSeries) WHERE actor.id = { SELECT actor.id FROM actor WHERE actor.name = 'Scott Foley' } RETURN tv_series.id }
+Match Status: [FIRST LF] [NO]
+-------------------- 92 123 ------------------------------------------------------------
+Find all movies by directors born in " Los Angeles "
+
+[GT] SELECT movie.title FROM movie WHERE movie.id = {
+  MATCH (movie:Movie)-[r:DirectedBy]->(director:Director) WHERE director.id = {
+    SELECT director.id FROM director WHERE director.birth_city = 'Los Angeles'
+  } RETURN movie.id
+}
+[0] SELECT movie.title FROM movie WHERE movie.birth_city = 'Los Angeles'
+[0] SELECT movie.title FROM movie WHERE movie.birth_city COLLECTION 'Los Angeles'
+[0] SELECT movie.title FROM movie WHERE movie.birth_city JSONB 'Los Angeles'
+[0] SELECT movie.title FROM movie WHERE movie.birth_city emit 'Los Angeles'
+> CANDIDATE 0: SELECT movie.title FROM movie WHERE movie.birth_city = 'Los Angeles'
+> CANDIDATE 1: SELECT movie.title FROM movie WHERE movie.birth_city COLLECTION 'Los Angeles'
+> CANDIDATE 2: SELECT movie.title FROM movie WHERE movie.birth_city JSONB 'Los Angeles'
+> CANDIDATE 3: SELECT movie.title FROM movie WHERE movie.birth_city emit 'Los Angeles'
+Match Status: [NO] [NO]
+-------------------- 93 124 ------------------------------------------------------------
+How many female actors were born in " New York City " after 1980 ?
+
+[GT] SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'New York City' AND actor.gender = 'female'
+[0] SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female'
+[0] SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'New York City' RETURN actor.birth_year > 1980 AND actor.gender = 'female'
+[0] SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1980 RETURN actor.gender = 'female'
+[0] SELECT AS (*) AS cnt FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female'
+> CANDIDATE 0: SELECT COUNT (*) AS cnt FROM actor WHERE actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female'
+Match Status: [NO] [NO]
+-------------------- 94 125 ------------------------------------------------------------
+What year is the movie " Dead Poets Society " from ?
+
+[GT] SELECT movie.release_year FROM movie WHERE movie.title = 'Dead Poets Society'
+[CORRECT]
+> CANDIDATE 0: SELECT movie.release_year FROM movie WHERE movie.title = 'Dead Poets Society'
+Match Status: [FIRST LF] [NO]
+-------------------- 95 126 ------------------------------------------------------------
+Who is the director of the series " House of Cards " produced by Netflix ?
+
+[GT] SELECT director.name FROM director WHERE director.id = {
+  MATCH (tv_series:TvSeries)-[:DirectedBy]->(director:Director), (tv_series:TvSeries)-[:MadeBy]->(producer:Producer) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' } AND producer.id = { SELECT producer.id FROM producer WHERE producer.name = 'Netflix'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards'
+  } RETURN director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards'
+  } WITH director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards'
+  } AND director.id
+}
+[0] SELECT director.name FROM director WHERE director.id = {
+  MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = {
+    SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards'
+  } LIMIT director.id
+}
+> CANDIDATE 0: SELECT director.name FROM director WHERE director.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' } RETURN director.id }
+> CANDIDATE 1: SELECT director.name FROM director WHERE director.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' } WITH director.id }
+> CANDIDATE 2: SELECT director.name FROM director WHERE director.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' } AND director.id }
+> CANDIDATE 3: SELECT director.name FROM director WHERE director.id = { MATCH (company:Company)-[r:Copyright]->(tv_series:TvSeries) WHERE tv_series.id = { SELECT tv_series.id FROM tv_series WHERE tv_series.title = 'House of Cards' } LIMIT director.id }
+Match Status: [NO] [NO]
+-------------------- 96 127 ------------------------------------------------------------
+How many actors from China have acted in " Rush Hour 3 "
+
+[GT] SELECT COUNT (*) AS cnt FROM actor WHERE actor.id = {
+  MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+    SELECT movie.id FROM movie WHERE movie.title = 'Rush Hour 3'
+  } RETURN actor.id
+} AND actor.nationality = 'China'
+[0] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Rush Hour 3'
+} WITH COUNT (*) AS cnt RETURN cnt
+[0] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Rush Hour 3'
+} RETURN COUNT (*) AS cnt RETURN cnt
+[0] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Rush Hour 3'
+} COUNT COUNT (*) AS cnt RETURN cnt
+[0] MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = {
+  SELECT movie.id FROM movie WHERE movie.title = 'Rush Hour 3'
+} AND COUNT (*) AS cnt RETURN cnt
+> CANDIDATE 0: MATCH (actor:Actor)-[r:Cast]->(movie:Movie) WHERE movie.id = { SELECT movie.id FROM movie WHERE movie.title = 'Rush Hour 3' } WITH COUNT (*) AS cnt RETURN cnt
+Match Status: [NO] [NO]
+
+LF: 18 / 34 (0.5294), EX: 18 / 34 (0.5294)
+Average LF: 0.5840, EX: 0.6485

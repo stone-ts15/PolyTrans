@@ -1,0 +1,660 @@
+QL: AQL aql
+Fold: 1
+-------------------- 97 1 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Juno" FOR company IN 1 INBOUND movie Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) RETURN company.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Joy" AND movie.release_year == 2015 FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+Match Status: [NO]
+-------------------- 98 2 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_year == 1984 RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 99 3 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year > 1990 RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "Canada" RETURN actor.name
+Match Status: [NO]
+-------------------- 100 4 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "autism") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "persians") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 101 5 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 102 6 ------------------------------------------------------------
+[GT] FOR genre IN Genre FILTER genre.genre == "Comedy" FOR movie IN 1 INBOUND genre Classification FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year == 2015 RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "Canada" RETURN actor.name
+Match Status: [NO]
+-------------------- 103 7 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.nationality == "China" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT m = movie WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN m.title
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Dead Poets Society" RETURN movie.release_year
+Match Status: [NO]
+-------------------- 104 8 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_year
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_year
+Match Status: [LF]
+-------------------- 105 9 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kate Winslet" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Benedict Cumberbatch" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 106 10 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.nationality == "Afghanistan" RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 107 11 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Steven Spielberg" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2006 RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Woody Allen" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Scarlett Johansson" RETURN movie.title
+Match Status: [NO]
+-------------------- 108 12 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "NBC Universal" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 AND movie.release_year > 2002 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 109 13 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Jim Jarmusch" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "Iran" COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Grumpier Old Men" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 110 14 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Inglourious Basterds" FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Grumpier Old Men" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 111 15 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.release_year == 2012 COLLECT WITH COUNT INTO length RETURN length
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Camp X-Ray" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN actor.name
+Match Status: [NO]
+-------------------- 112 16 ------------------------------------------------------------
+[GT] FOR writer IN Writer FILTER writer.name == "Matt Damon" FOR movie IN 1 INBOUND writer WrittenBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 113 17 ------------------------------------------------------------
+[GT] FOR actor_1 IN Actor FILTER actor_1.name == "Angelina Jolie" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) FILTER actor_2.name == "Brad Pitt" RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Scarlett Johansson" RETURN movie.title
+Match Status: [NO]
+-------------------- 114 18 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Brad Pitt" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT year = movie.release_year WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Gabriele Ferzetti" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 RETURN movie.title
+Match Status: [NO]
+-------------------- 115 19 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN actor.name
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 RETURN { name: movie.title, budget: movie.budget }
+Match Status: [NO]
+-------------------- 116 20 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.release_year == 2015 RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_year > 1980 AND actor.nationality == "Italy" RETURN actor.name
+Match Status: [NO]
+-------------------- 117 21 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Brad Pitt" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Robin Wright" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 118 22 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Alfred Hitchcock" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Matt Damon" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 119 23 ------------------------------------------------------------
+[GT] FOR movie IN Movie FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Daffy Duck" RETURN movie.title
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "The Imitation Game" RETURN movie.release_year
+Match Status: [NO]
+-------------------- 120 24 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kate Winslet" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Benedict Cumberbatch" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 121 25 ------------------------------------------------------------
+[GT] FOR actor_1 IN Actor FILTER actor_1.name == "Tom Hanks" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) RETURN actor_2.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Daddy Long Legs" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN cast.role
+Match Status: [NO]
+-------------------- 122 26 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "iraq-war") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "iraq-war") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year == 2015 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 123 27 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 2000 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "Austin" AND actor.gender == "female" RETURN actor.name
+Match Status: [NO]
+-------------------- 124 28 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "Netflix" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR company IN Company FILTER company.name == "Netflix" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [LF]
+-------------------- 125 29 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_city
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "The Imitation Game" RETURN movie.release_year
+Match Status: [NO]
+-------------------- 126 30 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.nationality == "Italy" RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 127 31 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Captain Miller" RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Rush Hour 3" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "China" COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+LF: 2 / 31 (0.0645), EX: 2 / 31 (0.0645)
+Fold: 2
+-------------------- 1 32 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "Netflix" FOR tv_series IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "TvSeries", tv_series ) RETURN tv_series.title
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 2 33 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.release_year == 2013 COLLECT WITH COUNT INTO length RETURN length
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND producer MadeBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 3 34 ------------------------------------------------------------
+[GT] FOR actor IN Actor FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT a = actor WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN a.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 4 35 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "Netflix" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 5 36 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "persians") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 1990 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 6 37 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.gender == "female" RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 7 38 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "James Bond" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "Canada" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+Match Status: [NO]
+-------------------- 8 39 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.nationality == "Canada" RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 9 40 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Alfred Hitchcock" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Alfred Hitchcock" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 10 41 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Humphrey Bogart" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 1942 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 11 42 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Shahab Hosseini" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Steven Spielberg" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 12 43 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Jurassic Park" FOR genre IN 1 OUTBOUND movie Classification FILTER IS_SAME_COLLECTION ( "Genre", genre ) RETURN genre.genre
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Daddy Long Legs" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN cast.role
+Match Status: [NO]
+-------------------- 13 44 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Brad Pitt" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT year = movie.release_year WITH COUNT INTO count RETURN { year, count }
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Brad Pitt" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT year = movie.release_year WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN cnt
+Match Status: [NO]
+-------------------- 14 45 ------------------------------------------------------------
+[GT] FOR movie IN Movie FOR genre IN 1 OUTBOUND movie Classification FILTER IS_SAME_COLLECTION ( "Genre", genre ) COLLECT m = movie WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN m.title
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 15 46 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_city
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_city
+Match Status: [LF]
+-------------------- 16 47 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "James Bond" FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+Match Status: [NO]
+-------------------- 17 48 ------------------------------------------------------------
+[GT] FOR genre IN Genre FILTER genre.genre == "Sci-Fi" FOR movie IN 1 INBOUND genre Classification FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year == 2010 RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "China" COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 18 49 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "Walt Disney" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 RETURN movie.title
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Camp X-Ray" FOR company IN 1 INBOUND movie Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 19 50 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Grumpier Old Men" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Daddy Long Legs" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN cast.role
+Match Status: [NO]
+-------------------- 20 51 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Asghar Farhadi" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Taraneh Alidoosti" RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Asghar Farhadi" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR genre IN 1 OUTBOUND movie Classification FILTER IS_SAME_COLLECTION ( "Genre", genre ) RETURN genre.genre
+Match Status: [NO]
+-------------------- 21 52 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "nuclear-weapons") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 22 53 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Austin" AND actor.gender == "female" RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 23 54 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "My Cousin Vinny" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Vinny Gambini" RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Captain Miller" RETURN actor.name
+Match Status: [NO]
+-------------------- 24 55 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 25 56 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kerry Washington" FOR tv_series IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "TvSeries", tv_series ) RETURN tv_series.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Kerry Washington" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 26 57 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Django Unchained" FOR writer IN 1 OUTBOUND movie WrittenBy FILTER IS_SAME_COLLECTION ( "Writer", writer ) RETURN writer.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Juno" FOR company IN 1 INBOUND movie Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) RETURN company.name
+Match Status: [NO]
+-------------------- 27 58 ------------------------------------------------------------
+[GT] FOR actor_1 IN Actor FILTER actor_1.name == "Jason Robards" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) FILTER actor_2.name == "Woody Strode" RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Jennifer Aniston" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 28 59 ------------------------------------------------------------
+[GT] FOR tv_series IN TvSeries FILTER tv_series.title == "House of Cards" AND tv_series.release_year == 2013 FOR director IN 1 OUTBOUND tv_series DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR tv_series IN TvSeries FILTER tv_series.title == "House of Cards" FOR company IN 1 INBOUND tv_series Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) FILTER company.name == "Netflix" FOR director IN 1 INBOUND tv_series DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+Match Status: [EX]
+-------------------- 29 60 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.nationality
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_city
+Match Status: [NO]
+-------------------- 30 61 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.nationality == "Afghanistan" RETURN director.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 31 62 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Finding Nemo" RETURN movie.budget
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Robin Wright" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+LF: 1 / 31 (0.0323), EX: 2 / 31 (0.0645)
+Fold: 3
+-------------------- 32 63 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Benedict Cumberbatch" RETURN actor.birth_year
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Humphrey Bogart" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 1942 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 33 64 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Steven Spielberg" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Matt Damon" COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Alfred Hitchcock" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 34 65 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Camp X-Ray" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 RETURN { name: movie.title, budget: movie.budget }
+Match Status: [NO]
+-------------------- 35 66 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "persians") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "iraq-war") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 36 67 ------------------------------------------------------------
+[GT] FOR producer IN Producer FILTER producer.name == "Shonda Rhimes" FOR tv_series IN 1 INBOUND producer MadeBy FILTER IS_SAME_COLLECTION ( "TvSeries", tv_series ) RETURN tv_series.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.birth_city == "Los Angeles" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 37 68 ------------------------------------------------------------
+[GT] FOR producer IN Producer FOR movie IN 1 INBOUND producer MadeBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) COLLECT producerName = producer.name WITH COUNT INTO directorCount SORT directorCount DESC LIMIT 1 RETURN producerName
+
+> CANDIDATE 0: FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 1942 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 38 69 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "Los Angeles" RETURN actor.name
+Match Status: [NO]
+-------------------- 39 70 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "A Beautiful Mind" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "John Nash" RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Rush Hour 3" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "China" COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 40 71 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Steven Spielberg" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Grumpier Old Men" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 41 72 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "The Past" FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.birth_city
+
+> CANDIDATE 0: FOR tv_series IN TvSeries FILTER tv_series.title == "House of Cards" AND tv_series.release_year == 2013 FOR director IN 1 OUTBOUND tv_series DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+Match Status: [NO]
+-------------------- 42 73 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kerry Washington" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Benedict Cumberbatch" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 43 74 ------------------------------------------------------------
+[GT] FOR producer IN Producer FILTER producer.name == "Walt Disney" FOR movie IN 1 INBOUND producer MadeBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 RETURN movie.title
+
+> CANDIDATE 0: FOR company IN Company FILTER company.name == "Netflix" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 44 75 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Tom Cruise" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 45 76 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Camp X-Ray" FOR company IN 1 INBOUND movie Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 46 77 ------------------------------------------------------------
+[GT] FOR tv_series IN TvSeries FILTER tv_series.title == "Mickey Mouse" FOR company IN 1 INBOUND tv_series Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) RETURN company.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Finding Nemo" RETURN movie.budget
+Match Status: [NO]
+-------------------- 47 78 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 1980 RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 48 79 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Jim Jarmusch" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT actorname = actor.name WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN actorname
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Asghar Farhadi" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Taraneh Alidoosti" RETURN movie.title
+Match Status: [NO]
+-------------------- 49 80 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Ronald Reagan" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Humphrey Bogart" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 1942 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 50 81 ------------------------------------------------------------
+[GT] FOR actor_1 IN Actor FILTER actor_1.name == "Matt Damon" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) FILTER actor_2.name == "Ben Affleck" RETURN movie.title
+
+> CANDIDATE 0: FOR actor_1 IN Actor FILTER actor_1.name == "Benedict Cumberbatch" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) FILTER actor_2.name == "Keira Knightley" RETURN movie.title
+Match Status: [NO]
+-------------------- 51 82 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "nuclear-weapons") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "persians") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 1990 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 52 83 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.gender == "female" RETURN actor.name
+Match Status: [NO]
+-------------------- 53 84 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year == 1984 RETURN actor.name
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 54 85 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "The Truman Show" FOR writer IN 1 OUTBOUND movie WrittenBy FILTER IS_SAME_COLLECTION ( "Writer", writer ) RETURN writer.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "Milan" RETURN actor.name
+Match Status: [NO]
+-------------------- 55 86 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "The Imitation Game" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Alan Turing" RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Rush Hour 3" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "China" COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 56 87 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Robin Wright" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 1942 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 57 88 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Asghar Farhadi" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR genre IN 1 OUTBOUND movie Classification FILTER IS_SAME_COLLECTION ( "Genre", genre ) RETURN genre.genre
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Steven Spielberg" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2006 RETURN movie.title
+Match Status: [NO]
+-------------------- 58 89 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Catch Me If You Can" FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Saving Private Ryan" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Captain Miller" RETURN actor.name
+Match Status: [NO]
+-------------------- 59 90 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Ellen Page" RETURN actor.nationality
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 60 91 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Joy" AND movie.release_year == 2015 FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "Dead Poets Society" RETURN movie.release_year
+Match Status: [NO]
+-------------------- 61 92 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "Netflix" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 62 93 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "The Imitation Game" RETURN movie.release_year
+
+> CANDIDATE 0: FOR movie IN Movie FILTER movie.title == "My Cousin Vinny" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Vinny Gambini" RETURN actor.name
+Match Status: [NO]
+LF: 0 / 31 (0.0000), EX: 0 / 31 (0.0000)
+Fold: 4
+-------------------- 63 94 ------------------------------------------------------------
+[GT] FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "iraq-war") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year == 2015 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR keyword IN Keyword FILTER CONTAINS(keyword.keyword, "iraq-war") FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 1990 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 64 95 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Daddy Long Legs" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) RETURN cast.role
+
+> CANDIDATE 0: SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS SOS
+Cannot recognize scope
+Match Status: [NO]
+-------------------- 65 96 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.release_year == 2007 AND movie.title == "Juno" RETURN movie.budget
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Alan Turing" RETURN actor.name
+Match Status: [NO]
+-------------------- 66 97 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Jim Jarmusch" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 RETURN movie.title
+
+> CANDIDATE 0: FOR company IN Company FILTER company.name == "NBC Universal" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+Match Status: [NO]
+-------------------- 67 98 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Milan" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Ronald Reagan" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 68 99 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 RETURN { name: movie.title, budget: movie.budget }
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Asghar Farhadi" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR genre IN 1 OUTBOUND movie Classification FILTER IS_SAME_COLLECTION ( "Genre", genre ) RETURN genre.genre
+Match Status: [NO]
+-------------------- 69 100 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 70 101 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Ellen Page" RETURN actor.birth_year
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+Match Status: [NO]
+-------------------- 71 102 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Matt Damon" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Alfred Hitchcock" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 72 103 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kevin Spacey" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.nationality
+Match Status: [NO]
+-------------------- 73 104 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Gabriele Ferzetti" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) SORT movie.release_year DESC LIMIT 1 RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+Match Status: [NO]
+-------------------- 74 105 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_year > 1980 AND actor.nationality == "Italy" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.nationality == "Canada" RETURN actor.name
+Match Status: [NO]
+-------------------- 75 106 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Woody Allen" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Scarlett Johansson" RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Steven Spielberg" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2006 RETURN movie.title
+Match Status: [NO]
+-------------------- 76 107 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Christoph Waltz" RETURN actor.nationality
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 77 108 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Austin" AND actor.birth_year > 1980 RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.nationality == "Canada" RETURN actor.name
+Match Status: [NO]
+-------------------- 78 109 ------------------------------------------------------------
+[GT] FOR actor_1 IN Actor FILTER actor_1.name == "Benedict Cumberbatch" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) FILTER actor_2.name == "Keira Knightley" RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year == 1984 RETURN actor.name
+Match Status: [NO]
+-------------------- 79 110 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Los Angeles" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 1980 RETURN actor.name
+Match Status: [NO]
+-------------------- 80 111 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_year
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Kevin Spacey" RETURN actor.birth_year
+Match Status: [LF]
+-------------------- 81 112 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 AND movie.release_year > 2002 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year < 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 82 113 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.name == "Quentin Tarantino" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.name == "Christoph Waltz" RETURN movie.title
+
+> CANDIDATE 0: FOR director IN Director FILTER director.name == "Asghar Farhadi" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR genre IN 1 OUTBOUND movie Classification FILTER IS_SAME_COLLECTION ( "Genre", genre ) RETURN genre.genre
+Match Status: [NO]
+-------------------- 83 114 ------------------------------------------------------------
+[GT] FOR company IN Company FILTER company.name == "NBC Universal" FOR movie IN 1 OUTBOUND company Copyright FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR director IN 1 OUTBOUND movie DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) FILTER director.gender == "male" RETURN director.name
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND keyword Tags FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 84 115 ------------------------------------------------------------
+[GT] FOR tv_series IN TvSeries FILTER tv_series.title == "Scandal" FOR company IN 1 INBOUND tv_series Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) RETURN company.name
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND producer MadeBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 85 116 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "The Imitation Game" FOR actor, cast IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Alan Turing" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Ronald Reagan" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 86 117 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Jennifer Aniston" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER movie.release_year > 2010 COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+Match Status: [NO]
+-------------------- 87 118 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "Tehran" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.nationality == "Canada" RETURN actor.name
+Match Status: [NO]
+-------------------- 88 119 ------------------------------------------------------------
+[GT] FOR actor IN Actor FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN actor.name
+
+> CANDIDATE 0: FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT m = movie WITH COUNT INTO cnt SORT cnt DESC LIMIT 1 RETURN m.title
+Match Status: [NO]
+-------------------- 89 120 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Benedict Cumberbatch" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Rowan Atkinson" FOR movie, cast IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FILTER cast.role == "Mr. Bean" RETURN movie.title
+Match Status: [NO]
+-------------------- 90 121 ------------------------------------------------------------
+[GT] FOR tv_series IN TvSeries FILTER tv_series.title == "Scandal" FOR actor, cast IN 1 INBOUND tv_series Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Olivia Pope" RETURN actor.name
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Ronald Reagan" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+Match Status: [NO]
+-------------------- 91 122 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.name == "Scott Foley" FOR tv_series IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "TvSeries", tv_series ) RETURN tv_series.title
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.name == "Ronald Reagan" FOR movie IN 1 OUTBOUND actor Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+-------------------- 92 123 ------------------------------------------------------------
+[GT] FOR director IN Director FILTER director.birth_city == "Los Angeles" FOR movie IN 1 INBOUND director DirectedBy FILTER IS_SAME_COLLECTION ( "Movie", movie ) RETURN movie.title
+
+> CANDIDATE 0: FOR actor_1 IN Actor FILTER actor_1.name == "Jason Robards" FOR movie IN 1 OUTBOUND actor_1 Cast FILTER IS_SAME_COLLECTION ( "Movie", movie ) FOR actor_2 IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor_2 ) FILTER actor_2.name == "Woody Strode" RETURN movie.title
+Match Status: [NO]
+-------------------- 93 124 ------------------------------------------------------------
+[GT] FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "New York City" AND actor.birth_year == 1984 RETURN actor.name
+Match Status: [NO]
+-------------------- 94 125 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Dead Poets Society" RETURN movie.release_year
+
+> CANDIDATE 0: FOR movie IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER cast.role == "Alan Turing" RETURN actor.name
+Match Status: [NO]
+-------------------- 95 126 ------------------------------------------------------------
+[GT] FOR tv_series IN TvSeries FILTER tv_series.title == "House of Cards" FOR company IN 1 INBOUND tv_series Copyright FILTER IS_SAME_COLLECTION ( "Company", company ) FILTER company.name == "Netflix" FOR director IN 1 INBOUND tv_series DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+
+> CANDIDATE 0: FOR tv_series IN TvSeries FILTER tv_series.title == "House of Cards" AND tv_series.release_year == 2013 FOR director IN 1 OUTBOUND tv_series DirectedBy FILTER IS_SAME_COLLECTION ( "Director", director ) RETURN director.name
+Match Status: [EX]
+-------------------- 96 127 ------------------------------------------------------------
+[GT] FOR movie IN Movie FILTER movie.title == "Rush Hour 3" FOR actor IN 1 INBOUND movie Cast FILTER IS_SAME_COLLECTION ( "Actor", actor ) FILTER actor.nationality == "China" COLLECT WITH COUNT INTO cnt RETURN cnt
+
+> CANDIDATE 0: FOR actor IN Actor FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 2000 COLLECT WITH COUNT INTO cnt RETURN cnt
+Match Status: [NO]
+LF: 1 / 34 (0.0294), EX: 2 / 34 (0.0588)
+Average LF: 0.0315, EX: 0.0470
