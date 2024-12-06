@@ -1,0 +1,835 @@
+Fold: 1
+-------------------- 97 1 ------------------------------------------------------------
+What company produced the movie " Juno " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Juno" ; TRAVERSAL movie-Copyright-company ; RETURN company.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Juno" ; TRAVERSAL movie-Copyright-company ; RETURN company.name ;
+Match Status: [FIRST LF]
+-------------------- 98 2 ------------------------------------------------------------
+Find all actors who were born in 1984
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_year == 1984 ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_year == 1984 ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 99 3 ------------------------------------------------------------
+Who are the actors born in " New York City " after 1990 ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year > 1990 ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year > 1990 ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 100 4 ------------------------------------------------------------
+Find all movies about Autism
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "autism" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "autism" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 101 5 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct before 2010 ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year < 2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 2: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; SORT cnt ;
+> CANDIDATE 3: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 102 6 ------------------------------------------------------------
+Find all comedies produced in year 2015
+
+[GT] COLLECTION genre Genre ; FILTER genre.genre == "Comedy" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year == 2015 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION genre Genre ; FILTER genre.genre == "Comedies" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year == 2015 ; RETURN movie.title ;
+> CANDIDATE 1: COLLECTION genre Genre ; FILTER genre.genre == "comedies" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year == 2015 ; RETURN movie.title ;
+> CANDIDATE 2: COLLECTION genre Genre ; FILTER genre.genre == "Comedies" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year == 2015 ; RETURN movie.title ;
+> CANDIDATE 3: COLLECTION genre Genre ; FILTER genre.genre == "Comedies" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year DESC 2015 ; RETURN movie.title ;
+Match Status: [NO]
+-------------------- 103 7 ------------------------------------------------------------
+which movie has the most number of actors from China ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.nationality == "China" ; TRAVERSAL actor-Cast-movie ; AGGREGATE m = movie cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN m.title ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "China" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "China" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION movie Movie ; FILTER movie.title == "China" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "China" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 2: COLLECTION movie Movie ; FILTER movie.title == "Chinese" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "China" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 3: COLLECTION movie Movie ; FILTER movie.title == "Chinese" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "China" ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 104 8 ------------------------------------------------------------
+When was " Kevin Spacey " born ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_year ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 105 9 ------------------------------------------------------------
+Find all movies featuring " Kate Winslet "
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kate Winslet" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kate Winslet" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 106 10 ------------------------------------------------------------
+Give me the name of all the actors from Afghanistan
+
+[GT] COLLECTION actor Actor ; FILTER actor.nationality == "Afghanistan" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.nationality == "Afghanistan" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 107 11 ------------------------------------------------------------
+Find all movies directed by " Steven Spielberg " after 2006
+
+[GT] COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2006 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2006 ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 108 12 ------------------------------------------------------------
+Who is directed the latest movie by " NBC Universal "
+
+[GT] COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN movie.name ;
+> CANDIDATE 1: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN movie.title ;
+> CANDIDATE 2: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN movie.name ;
+> CANDIDATE 3: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; SORT movie.release_year == ; LIMIT 1 ; RETURN movie.name ;
+Match Status: [NO]
+-------------------- 109 13 ------------------------------------------------------------
+find the number of actors from Iran who played in " Jim Jarmusch " movies
+
+[GT] COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "Iran" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "Iran" ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 110 14 ------------------------------------------------------------
+Who directed the movie " Inglourious Basterds " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Inglourious Basterds" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Inglourious Basterds" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 111 15 ------------------------------------------------------------
+How many movies were produced in the year 2012 ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.release_year == 2012 ; AGGREGATE length ; RETURN length ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.release_year == 2012 ; AGGREGATE length ; RETURN length ;
+Match Status: [FIRST LF]
+-------------------- 112 16 ------------------------------------------------------------
+Find all movies written by " Matt Damon "
+
+[GT] COLLECTION writer Writer ; FILTER writer.name == "Matt Damon" ; TRAVERSAL writer-WrittenBy-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION writer Writer ; FILTER writer.name == "Matt Damon" ; TRAVERSAL writer-WrittenBy-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 113 17 ------------------------------------------------------------
+Find all movies that star both " Angelina Jolie " and " Brad Pitt "
+
+[GT] COLLECTION actor_1 Actor ; FILTER actor_1.name == "Angelina Jolie" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Brad Pitt" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor_1 Actor ; FILTER actor_1.name == "Angelina Jolie" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Brad Pitt" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 114 18 ------------------------------------------------------------
+What is the maximum number of movies in which " Brad Pitt " act in a given year ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE year = movie.release_year cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE year = movie.release_year count ; RETURN = movie.release_year count ;
+> CANDIDATE 1: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE year = movie.release_year count ; RETURN { year , count } ;
+> CANDIDATE 2: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE year = movie.release_year count ; RETURN desc year , count } ;
+> CANDIDATE 3: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE year = movie.release_year count ; RETURN emit year , count } ;
+Match Status: [NO]
+-------------------- 115 19 ------------------------------------------------------------
+Find the actors who played in the latest movie by " Quentin Tarantino "
+
+[GT] COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 116 20 ------------------------------------------------------------
+Find all movies produced in 2015
+
+[GT] COLLECTION movie Movie ; FILTER movie.release_year == 2015 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.release_year == 2015 ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 117 21 ------------------------------------------------------------
+What is the number of movies featuring " Brad Pitt " ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 118 22 ------------------------------------------------------------
+How many movies did " Alfred Hitchcock " direct ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Alfred Hitchcock" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Alfred Hitchcock" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 119 23 ------------------------------------------------------------
+Which movie had the character " Daffy Duck "
+
+[GT] COLLECTION movie Movie ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Daffy Duck" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Daffy Duck" ; TRAVERSAL movie-Cast,cast-actor ; RETURN cast.role ;
+> CANDIDATE 1: COLLECTION movie Movie ; FILTER movie.title == "Daffy Duck" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role ;
+> CANDIDATE 2: COLLECTION movie Movie ; FILTER movie.title == "Daffy Duck" ; TRAVERSAL movie-Cast,cast-actor ; RETURN cast.role ;
+> CANDIDATE 3: COLLECTION movie Movie ; FILTER movie.title == "Daffy Duck" ; TRAVERSAL movie-Cast,cast-actor ; SORT cast.role ;
+Match Status: [NO]
+-------------------- 120 24 ------------------------------------------------------------
+Find the directors of all movies featuring " Kate Winslet "
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kate Winslet" ; TRAVERSAL actor-Cast-movie ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kate Winslet" ; TRAVERSAL actor-Cast-movie ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 121 25 ------------------------------------------------------------
+Find all actors who acted in the same movie as " Tom Hanks "
+
+[GT] COLLECTION actor_1 Actor ; FILTER actor_1.name == "Tom Hanks" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; RETURN actor_2.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Tom Hanks" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+> CANDIDATE 1: COLLECTION actor Actor ; FILTER actor.name == "Tom Hanks" ; TRAVERSAL actor-Cast-movie ; RETURN movie.movie ; RETURN movie.title ;
+> CANDIDATE 2: COLLECTION actor Actor ; FILTER actor.name == "Tom Hanks" ; TRAVERSAL actor-Cast-movie ; RETURN movie.name ;
+> CANDIDATE 3: COLLECTION actor Actor ; FILTER actor.name == "Tom Hanks" ; TRAVERSAL actor-Cast-movie ; LIMIT movie.title ;
+Match Status: [NO]
+-------------------- 122 26 ------------------------------------------------------------
+Find all movies about Iraq war
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 123 27 ------------------------------------------------------------
+How many actors were born in " Los Angeles " after 2000 ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 2000 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 2000 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 124 28 ------------------------------------------------------------
+Find all movies produced by Netflix
+
+[GT] COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 125 29 ------------------------------------------------------------
+Where is the birth place of " Kevin Spacey "
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_city ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_city ;
+Match Status: [FIRST LF]
+-------------------- 126 30 ------------------------------------------------------------
+Find all actors from Italy
+
+[GT] COLLECTION actor Actor ; FILTER actor.nationality == "Italy" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.nationality == "Italy" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 127 31 ------------------------------------------------------------
+Find the actor who played " Captain Miller " in the movie " Saving Private Ryan "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Saving Private Ryan" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Captain Miller" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Saving Private Ryan" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Captain Miller" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+LF: 24 / 31 (0.7742), EX: 24 / 31 (0.7742)
+Fold: 2
+-------------------- 1 32 ------------------------------------------------------------
+Find all tv series produced by Netflix
+
+[GT] COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-tv_series ; RETURN tv_series.title ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-tv_series ; RETURN tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 2 33 ------------------------------------------------------------
+What is the number of movies produced in 2013 ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.release_year == 2013 ; AGGREGATE length ; RETURN length ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.release_year == 2013 ; AGGREGATE length ; RETURN length ;
+Match Status: [FIRST LF]
+-------------------- 3 34 ------------------------------------------------------------
+Find the actor with most number of films
+
+[GT] COLLECTION actor Actor ; TRAVERSAL actor-Cast-movie ; AGGREGATE a = actor cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN a.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "MadeBy-movie" ; TRAVERSAL movie-Cast-actor ; AGGREGATE actorname = actor.name cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION actor Actor ; FILTER actor.name == "Cast-movie" ; TRAVERSAL movie-Cast-actor ; AGGREGATE actorname = actor.name cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN actor.name ;
+> CANDIDATE 2: COLLECTION actor Actor ; FILTER actor.name == "Cast-movie" ; TRAVERSAL movie-Cast-actor ; AGGREGATE actorname = actor.name cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 3: COLLECTION actor Actor ; FILTER actor.name == "Cast-movie" ; TRAVERSAL movie-Cast-actor ; AGGREGATE actorname = actor.name cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 4 35 ------------------------------------------------------------
+Find all movies that were produced by Netflix
+
+[GT] COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 5 36 ------------------------------------------------------------
+How many movies about Persians were released after 1990 ?
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "persians" ) ; TRAVERSAL keyword-Tags-movie ; FILTER movie.release_year > 1990 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "persians" ) ; TRAVERSAL keyword-Tags-movie ; FILTER movie.release_year > 1990 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 6 37 ------------------------------------------------------------
+Find all the female actors in the movie " Saving Private Ryan "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Saving Private Ryan" ; TRAVERSAL movie-Cast-actor ; FILTER actor.gender == "female" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Saving Private Ryan" ; TRAVERSAL movie-Cast-actor ; FILTER actor.gender == "female" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 7 38 ------------------------------------------------------------
+Find all actors from Canada who acted in " James Bond " movies
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "James Bond" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "Canada" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "James Bond" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "Canada" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 8 39 ------------------------------------------------------------
+Find all actors who are from Canada
+
+[GT] COLLECTION actor Actor ; FILTER actor.nationality == "Canada" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.nationality == "Canada" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 9 40 ------------------------------------------------------------
+Which movies did " Alfred Hitchcock " direct ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Alfred Hitchcock" ; TRAVERSAL director-DirectedBy-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Alfred Hitchcock" ; TRAVERSAL director-DirectedBy-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 10 41 ------------------------------------------------------------
+How many movies did " Humphrey Bogart " act in before 1942 ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Humphrey Bogart" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year < 1942 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Humphrey Bogart" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year < 1942 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 11 42 ------------------------------------------------------------
+How many movies did " Shahab Hosseini " act in
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Shahab Hosseini" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Shahab Hosseini" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 12 43 ------------------------------------------------------------
+What is the genre of the movie " Jurassic Park " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Jurassic Park" ; TRAVERSAL movie-Classification-genre ; RETURN genre.genre ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Jurassic Park" ; TRAVERSAL movie-Classification-genre ; RETURN genre.genre ;
+Match Status: [FIRST LF]
+-------------------- 13 44 ------------------------------------------------------------
+What is the number of movies that " Brad Pitt " acts in per year ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; AGGREGATE year = movie.release_year count ; RETURN { year , count } ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year DESC ; LIMIT 1 ; RETURN movie.title ;
+> CANDIDATE 1: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year < ; LIMIT 1 ; RETURN movie.title ;
+> CANDIDATE 2: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year DESC ; LIMIT 1 ; RETURN movie.release_year ;
+> CANDIDATE 3: COLLECTION actor Actor ; FILTER actor.name == "Brad Pitt" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year DESC ; LIMIT 1 ; RETURN movie.title ;
+Match Status: [NO]
+-------------------- 14 45 ------------------------------------------------------------
+Find the movie which is classified in the most number of genres
+
+[GT] COLLECTION movie Movie ; TRAVERSAL movie-Classification-genre ; AGGREGATE m = movie cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN m.title ;
+> CANDIDATE 0: COLLECTION genre Genre ; FILTER genre.genre == "movie" ; TRAVERSAL movie-Classification-genre ; AGGREGATE cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION genre Genre ; FILTER genre.genre == "movie" ; TRAVERSAL movie-Classification-genre ; AGGREGATE m = movie cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN m.title ;
+> CANDIDATE 2: COLLECTION genre Genre ; FILTER genre.genre == "movie" ; TRAVERSAL movie-Classification-genre ; AGGREGATE m = genre cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN m.title ;
+> CANDIDATE 3: COLLECTION genre Genre ; FILTER genre.genre == "Movie" ; TRAVERSAL genre-Classification-movie ; AGGREGATE m = movie cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN m.title ;
+Match Status: [NO]
+-------------------- 15 46 ------------------------------------------------------------
+In what city was " Kevin Spacey " born ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_city ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_city ;
+Match Status: [FIRST LF]
+-------------------- 16 47 ------------------------------------------------------------
+List " James Bond " directors
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "James Bond" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "James Bond" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 17 48 ------------------------------------------------------------
+List all the Sci-Fi movies which released in 2010
+
+[GT] COLLECTION genre Genre ; FILTER genre.genre == "Sci-Fi" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year == 2010 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION genre Genre ; FILTER genre.genre == "Sci-Fi" ; TRAVERSAL genre-Classification-movie ; FILTER movie.release_year == 2010 ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 18 49 ------------------------------------------------------------
+Find all movies produced by company " Walt Disney " after 2010
+
+[GT] COLLECTION company Company ; FILTER company.name == "Walt Disney" ; TRAVERSAL company-Copyright-movie ; FILTER movie.release_year > 2010 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "Walt Disney" ; TRAVERSAL company-Copyright-movie ; FILTER movie.release_year > 2010 ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 19 50 ------------------------------------------------------------
+What is the number of actors in the movie " Grumpier Old Men " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Grumpier Old Men" ; TRAVERSAL movie-Cast-actor ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Grumpier Old Men" ; TRAVERSAL movie-Cast-actor ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 20 51 ------------------------------------------------------------
+List all the movies directed by " Asghar Farhadi " in which " Taraneh Alidoosti " played
+
+[GT] COLLECTION director Director ; FILTER director.name == "Asghar Farhadi" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Taraneh Alidoosti" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Asghar Farhadi" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Taraneh Alidoosti" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 21 52 ------------------------------------------------------------
+What are the movies related to nuclear weapons
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 22 53 ------------------------------------------------------------
+Find all the female actors from Austin
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Austin" AND actor.gender == "female" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Austin" AND actor.gender == "female" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 23 54 ------------------------------------------------------------
+Who was the actor that played " Vinny Gambini " in the movie " My Cousin Vinny " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "My Cousin Vinny" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Vinny Gambini" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "My Cousin Vinny" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Vinny Gambini" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 24 55 ------------------------------------------------------------
+Find all the female actors born in " New York City " after 1980
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 25 56 ------------------------------------------------------------
+What are the series featuring " Kerry Washington " ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kerry Washington" ; TRAVERSAL actor-Cast-tv_series ; RETURN tv_series.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kerry Washington" ; TRAVERSAL actor-Cast-tv_series ; RETURN tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 26 57 ------------------------------------------------------------
+Who is the writer of the movie " Django Unchained "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Django Unchained" ; TRAVERSAL movie-WrittenBy-writer ; RETURN writer.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Django Unchained" ; TRAVERSAL movie-WrittenBy-writer ; RETURN writer.name ;
+Match Status: [FIRST LF]
+-------------------- 27 58 ------------------------------------------------------------
+Find all movies featuring " Jason Robards " and " Woody Strode "
+
+[GT] COLLECTION actor_1 Actor ; FILTER actor_1.name == "Jason Robards" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Woody Strode" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor_1 Actor ; FILTER actor_1.name == "Jason Robards" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Woody Strode" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 28 59 ------------------------------------------------------------
+Who is the director of the tv series " House of Cards " from 2013 ?
+
+[GT] COLLECTION tv_series TvSeries ; FILTER tv_series.title == "House of Cards" AND tv_series.release_year == 2013 ; TRAVERSAL tv_series-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION tv_series TvSeries ; FILTER tv_series.title == "House of Cards" AND tv_series.release_year == 2013 ; TRAVERSAL tv_series-DirectedBy-director ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 29 60 ------------------------------------------------------------
+What is the nationality of " Kevin Spacey " ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.nationality ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.nationality ;
+Match Status: [FIRST LF]
+-------------------- 30 61 ------------------------------------------------------------
+Find all the directors who are from Afghanistan
+
+[GT] COLLECTION director Director ; FILTER director.nationality == "Afghanistan" ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.nationality == "Afghanistan" ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 31 62 ------------------------------------------------------------
+How much was the budget of " Finding Nemo "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Finding Nemo" ; RETURN movie.budget ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Finding Nemo" ; RETURN movie.budget ;
+Match Status: [FIRST LF]
+LF: 28 / 31 (0.9032), EX: 28 / 31 (0.9032)
+Fold: 3
+-------------------- 32 63 ------------------------------------------------------------
+In what year was " Benedict Cumberbatch " born
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Benedict Cumberbatch" ; RETURN actor.birth_year ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Benedict Cumberbatch" ; RETURN actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 33 64 ------------------------------------------------------------
+How many movies are there that are directed by " Steven Spielberg " and featuring " Matt Damon " ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Matt Damon" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Matt Damon" ; AGGREGATE cnt ; RETURN cnt
+> CANDIDATE 1: COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Matt Damon" ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST EX]
+-------------------- 34 65 ------------------------------------------------------------
+Find the actors who played in the movie " Camp X-Ray "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Camp X-Ray" ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Camp X-Ray" ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 35 66 ------------------------------------------------------------
+Find all movies about Persians
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "persians" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "persians" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 36 67 ------------------------------------------------------------
+What are all the tv series created by " Shonda Rhimes " ?
+
+[GT] COLLECTION producer Producer ; FILTER producer.name == "Shonda Rhimes" ; TRAVERSAL producer-MadeBy-tv_series ; RETURN tv_series.title ;
+> CANDIDATE 0: COLLECTION producer Producer ; FILTER producer.name == "Shonda Rhimes" ; TRAVERSAL producer-MadeBy-tv_series ; RETURN tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 37 68 ------------------------------------------------------------
+Which producer has worked with the most number of directors ?
+
+[GT] COLLECTION producer Producer ; TRAVERSAL producer-MadeBy-movie ; TRAVERSAL movie-DirectedBy-director ; AGGREGATE producerName = producer.name directorCount ; SORT directorCount DESC ; LIMIT 1 ; RETURN producerName ;
+> CANDIDATE 0: COLLECTION producer Producer ; TRAVERSAL producer-Producer-DirectedBy-director ; AGGREGATE cnt ; RETURN cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION producer Producer ; TRAVERSAL producer-DirectedBy-director ; AGGREGATE cnt ; RETURN cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 2: COLLECTION producer Producer ; TRAVERSAL producer-Producer ; AGGREGATE cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 3: COLLECTION producer Producer ; TRAVERSAL producer-Produit ; AGGREGATE cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 38 69 ------------------------------------------------------------
+find all films in which " Rowan Atkinson " acted as " Mr. Bean "
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Rowan Atkinson" ; TRAVERSAL actor-Cast,cast-movie ; FILTER cast.role == "Mr. Bean" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Rowan Atkinson" ; TRAVERSAL actor-Cast,cast-movie ; FILTER cast.role == "Mr. Bean" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 39 70 ------------------------------------------------------------
+Who acted " John Nash " in the movie " A Beautiful Mind " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "A Beautiful Mind" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "John Nash" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "A Beautiful Mind" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "John Nash" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 40 71 ------------------------------------------------------------
+How many movies did " Steven Spielberg " direct ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Steven Spielberg" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 41 72 ------------------------------------------------------------
+where is the director of " The Past " from
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "The Past" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.birth_city ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "The Past" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.birth_city ;
+Match Status: [FIRST LF]
+-------------------- 42 73 ------------------------------------------------------------
+What are all the movies featuring " Kerry Washington " ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kerry Washington" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kerry Washington" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 43 74 ------------------------------------------------------------
+Find all movies produced by producer " Walt Disney " after 2010
+
+[GT] COLLECTION producer Producer ; FILTER producer.name == "Walt Disney" ; TRAVERSAL producer-MadeBy-movie ; FILTER movie.release_year > 2010 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION producer Producer ; FILTER producer.name == "Walt Disney" ; TRAVERSAL producer-MadeBy-movie ; FILTER movie.release_year > 2010 ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 44 75 ------------------------------------------------------------
+What is the number of movies in which " Tom Cruise " acted ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Tom Cruise" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Tom Cruise" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 45 76 ------------------------------------------------------------
+How many companies participated in producing " Camp X-Ray "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Camp X-Ray" ; TRAVERSAL movie-Copyright-company ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Camp X-Ray" ; TRAVERSAL movie-Copyright-company ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 46 77 ------------------------------------------------------------
+which company funded the " Mickey Mouse " series
+
+[GT] COLLECTION tv_series TvSeries ; FILTER tv_series.title == "Mickey Mouse" ; TRAVERSAL tv_series-Copyright-company ; RETURN company.name ;
+> CANDIDATE 0: COLLECTION tv_series TvSeries ; FILTER tv_series.title == "Mickey Mouse" ; TRAVERSAL tv_series-Copyright-company ; RETURN company.name ;
+Match Status: [FIRST LF]
+-------------------- 47 78 ------------------------------------------------------------
+Find all actors born in " Los Angeles " after 1980
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 1980 ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Los Angeles" AND actor.birth_year > 1980 ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 48 79 ------------------------------------------------------------
+Who acted in the most number of movies directed by " Jim Jarmusch "
+
+[GT] COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; AGGREGATE actorname = actor.name cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN actorname ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE a = actor cnt ; SORT cnt DESC ; LIMIT 1 ; RETURN a.name ;
+> CANDIDATE 2: COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt DESC ; LIMIT 1 ; RETURN cnt ;
+> CANDIDATE 3: COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt DESC ; LIMIT 1 ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 49 80 ------------------------------------------------------------
+How many movies did " Ronald Reagan " act in ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Ronald Reagan" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Ronald Reagan" ; TRAVERSAL actor-Cast-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 50 81 ------------------------------------------------------------
+Find all movies featuring both " Matt Damon " and " Ben Affleck "
+
+[GT] COLLECTION actor_1 Actor ; FILTER actor_1.name == "Matt Damon" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Ben Affleck" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor_1 Actor ; FILTER actor_1.name == "Matt Damon" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Ben Affleck" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 51 82 ------------------------------------------------------------
+List all the directors of movies about nuclear weapons
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; FILTER movie.title ;
+> CANDIDATE 1: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.title ;
+> CANDIDATE 2: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; SORT movie.title ;
+> CANDIDATE 3: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "nuclear-weapons" ) ; TRAVERSAL keyword-Tags-movie ; LIMIT movie.title ;
+Match Status: [NO]
+-------------------- 52 83 ------------------------------------------------------------
+How many actors are in the movie " Saving Private Ryan " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Saving Private Ryan" ; TRAVERSAL movie-Cast-actor ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Saving Private Ryan" ; TRAVERSAL movie-Cast-actor ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 53 84 ------------------------------------------------------------
+Find all actors who were born in " New York City " in 1984
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year == 1984 ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year == 1984 ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 54 85 ------------------------------------------------------------
+Who is the writer of " The Truman Show "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "The Truman Show" ; TRAVERSAL movie-WrittenBy-writer ; RETURN writer.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "The Truman Show" ; TRAVERSAL movie-WrittenBy-writer ; RETURN writer.name ;
+Match Status: [FIRST LF]
+-------------------- 55 86 ------------------------------------------------------------
+Who acts as " Alan Turing " in the movie " The Imitation Game " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "The Imitation Game" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Alan Turing" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "The Imitation Game" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Alan Turing" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 56 87 ------------------------------------------------------------
+Find all movies in which " Robin Wright " appears
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Robin Wright" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Robin Wright" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 57 88 ------------------------------------------------------------
+what are the genres of movies directed by " Asghar Farhadi "
+
+[GT] COLLECTION director Director ; FILTER director.name == "Asghar Farhadi" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Classification-genre ; RETURN genre.genre ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Asghar Farhadi" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Classification-genre ; RETURN genre.genre ;
+Match Status: [FIRST LF]
+-------------------- 58 89 ------------------------------------------------------------
+Who is the director of the movie " Catch Me If You Can " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Catch Me If You Can" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Catch Me If You Can" ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 59 90 ------------------------------------------------------------
+What is the nationality of the actress " Ellen Page " ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Ellen Page" ; RETURN actor.nationality ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Ellen Page" ; RETURN actor.nationality ;
+Match Status: [FIRST LF]
+-------------------- 60 91 ------------------------------------------------------------
+Who was the director of the movie " Joy " from 2015 ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Joy" AND movie.release_year == 2015 ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Joy" AND movie.release_year == 2015 ; TRAVERSAL movie-DirectedBy-director ; RETURN director.name ;
+Match Status: [FIRST LF]
+-------------------- 61 92 ------------------------------------------------------------
+How many movies did Netflix produce ?
+
+[GT] COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "Netflix" ; TRAVERSAL company-Copyright-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 62 93 ------------------------------------------------------------
+What year was the movie " The Imitation Game " produced
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "The Imitation Game" ; RETURN movie.release_year ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "The Imitation Game" ; RETURN movie.release_year ;
+Match Status: [FIRST LF]
+LF: 27 / 31 (0.8710), EX: 28 / 31 (0.9032)
+Fold: 4
+-------------------- 63 94 ------------------------------------------------------------
+How many movies about Iraq war were produced in 2015 ?
+
+[GT] COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; FILTER movie.release_year == 2015 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; FILTER movie.release_year > 2015 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; RETURN movie.release_year > 2015 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 2: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; SORT movie.release_year > 2015 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 3: COLLECTION keyword Keyword ; FILTER CONTAINS ( keyword.keyword , "iraq-war" ) ; TRAVERSAL keyword-Tags-movie ; FILTER movie.release_year = 2015 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 64 95 ------------------------------------------------------------
+What are the major roles in the movie " Daddy Long Legs "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Daddy Long Legs" ; TRAVERSAL movie-Cast,cast-actor ; RETURN cast.role ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Daddy Long Legs" ; TRAVERSAL movie-Cast,cast-actor ; RETURN cast.role ;
+Match Status: [FIRST LF]
+-------------------- 65 96 ------------------------------------------------------------
+What was the budget of the movie Juno from 2007 ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.release_year == 2007 AND movie.title == "Juno" ; RETURN movie.budget ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Juno" AND movie.release_year == 2007 ; RETURN movie.budget ;
+> CANDIDATE 1: COLLECTION movie Movie ; FILTER movie.title == "Juno" RETURN movie.release_year == 2007 ; RETURN movie.budget ;
+> CANDIDATE 2: COLLECTION movie Movie ; FILTER movie.title == "Juno" FILTER movie.release_year == 2007 ; RETURN movie.budget ;
+> CANDIDATE 3: COLLECTION movie Movie ; FILTER movie.title == "Juno" DESC movie.release_year == 2007 ; RETURN movie.budget ;
+Match Status: [FIRST EX]
+-------------------- 66 97 ------------------------------------------------------------
+What is the latest movie by " Jim Jarmusch "
+
+[GT] COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Jim Jarmusch" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 67 98 ------------------------------------------------------------
+Find all actors born in Milan
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Milan" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Milan" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 68 99 ------------------------------------------------------------
+Find the name and budget of the latest movie by " Quentin Tarantino "
+
+[GT] COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN { name : movie.title , budget : movie.budget } ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Budget ; RETURN 1 ; RETURN movie.title ;
+> CANDIDATE 1: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Budget ; RETURN movie.title ;
+> CANDIDATE 2: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Buffet ; RETURN movie.title ;
+> CANDIDATE 3: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Budget ; RETURN m.title ;
+Match Status: [NO]
+-------------------- 69 100 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct after 2010 ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 70 101 ------------------------------------------------------------
+What year was " Ellen Page " born ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Ellen Page" ; RETURN actor.birth_year ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Ellen Page" ; RETURN actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 71 102 ------------------------------------------------------------
+How many movies did " Matt Damon " direct ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Matt Damon" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Matt Damon" ; TRAVERSAL director-DirectedBy-movie ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 72 103 ------------------------------------------------------------
+Find all movies featuring " Kevin Spacey "
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 73 104 ------------------------------------------------------------
+Find the latest movie which " Gabriele Ferzetti " acted in
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Gabriele Ferzetti" ; TRAVERSAL actor-Cast-movie ; SORT movie.release_year DESC ; LIMIT 1 ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Gabrielle Ferzetti" ; TRAVERSAL actor-Cast-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+> CANDIDATE 1: COLLECTION actor Actor ; FILTER actor.name == "Gabriele Ferzetti" ; TRAVERSAL actor-Cast-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+> CANDIDATE 2: COLLECTION actor Actor ; FILTER actor.name == "Gabrielle Ferzetti" ; TRAVERSAL actor-Cast-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+> CANDIDATE 3: COLLECTION actor Actor ; FILTER actor.name == "Gabriele Ferzetti" ; TRAVERSAL actor-Cast-movie ; SORT movie.release_year DESC ; LIMIT 1 ; TRAVERSAL movie-Cast-actor ; RETURN actor.name ;
+Match Status: [NO]
+-------------------- 74 105 ------------------------------------------------------------
+Find all actors from Italy born after 1980
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_year > 1980 AND actor.nationality == "Italy" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_year > 1980 AND actor.nationality == "Italy" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 75 106 ------------------------------------------------------------
+Find all movies directed by " Woody Allen " and featuring " Scarlett Johansson "
+
+[GT] COLLECTION director Director ; FILTER director.name == "Woody Allen" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Scarlett Johansson" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Woody Allen" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Scarlett Johansson" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 76 107 ------------------------------------------------------------
+What is the nationality of the actor " Christoph Waltz " ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Christoph Waltz" ; RETURN actor.nationality ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Christoph Waltz" ; RETURN actor.nationality ;
+Match Status: [FIRST LF]
+-------------------- 77 108 ------------------------------------------------------------
+Find all actors from Austin born after 1980
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Austin" AND actor.birth_year > 1980 ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Austin" AND actor.birth_year > 1980 ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 78 109 ------------------------------------------------------------
+Find all movies featuring " Benedict Cumberbatch " and " Keira Knightley "
+
+[GT] COLLECTION actor_1 Actor ; FILTER actor_1.name == "Benedict Cumberbatch" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Keira Knightley" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor_1 Actor ; FILTER actor_1.name == "Benedict Cumberbatch" ; TRAVERSAL actor_1-Cast-movie ; TRAVERSAL movie-Cast-actor_2 ; FILTER actor_2.name == "Keira Knightley" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 79 110 ------------------------------------------------------------
+Find all actors born in " Los Angeles "
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Los Angeles" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Los Angeles" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 80 111 ------------------------------------------------------------
+In what year was " Kevin Spacey " born ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_year ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Kevin Spacey" ; RETURN actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 81 112 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct after 2002 and before 2010 ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year < 2010 AND movie.release_year > 2002 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year < 2002 bis 2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 1: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year < 2002-2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 2: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year < 2002 ; AGGREGATE year = movie.release_year before 2010 ; RETURN movie.title ;
+> CANDIDATE 3: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; FILTER movie.release_year < 2002 before 2010 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [NO]
+-------------------- 82 113 ------------------------------------------------------------
+What are all the movies directed by " Quentin Tarantino " featuring " Christoph Waltz " ?
+
+[GT] COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Christoph Waltz" ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.name == "Quentin Tarantino" ; TRAVERSAL director-DirectedBy-movie ; TRAVERSAL movie-Cast-actor ; FILTER actor.name == "Christoph Waltz" ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 83 114 ------------------------------------------------------------
+List all male directors who worked with the " NBC Universal " company
+
+[GT] COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; TRAVERSAL movie-DirectedBy-director ; FILTER director.gender == "male" ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; RETURN movie.title ;
+> CANDIDATE 1: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; FILTER movie.title ;
+> CANDIDATE 2: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; SORT movie.title ;
+> CANDIDATE 3: COLLECTION company Company ; FILTER company.name == "NBC Universal" ; TRAVERSAL company-Copyright-movie ; LIMIT movie.title ;
+Match Status: [NO]
+-------------------- 84 115 ------------------------------------------------------------
+What company produced the series Scandal ?
+
+[GT] COLLECTION tv_series TvSeries ; FILTER tv_series.title == "Scandal" ; TRAVERSAL tv_series-Copyright-company ; RETURN company.name ;
+> CANDIDATE 0: COLLECTION tv_series TvSeries ; FILTER tv_series.title == "Scandal" ; TRAVERSAL tv_series-Copyright-company ; RETURN company.name ;
+Match Status: [FIRST LF]
+-------------------- 85 116 ------------------------------------------------------------
+Who is the actor playing " Alan Turing " in " The Imitation Game " ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "The Imitation Game" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Alan Turing" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "The Imitation Game" ; TRAVERSAL movie-Cast,cast-actor ; FILTER cast.role == "Alan Turing" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 86 117 ------------------------------------------------------------
+What is the number of movies in which " Jennifer Aniston " acted after 2010 ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Jennifer Aniston" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Jennifer Aniston" ; TRAVERSAL actor-Cast-movie ; FILTER movie.release_year > 2010 ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 87 118 ------------------------------------------------------------
+Which actors were born in Tehran
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "Tehran" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "Tehran" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 88 119 ------------------------------------------------------------
+who acted the role of " Mr. Bean "
+
+[GT] COLLECTION actor Actor ; TRAVERSAL actor-Cast,cast-movie ; FILTER cast.role == "Mr. Bean" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION actor Actor ; TRAVERSAL actor-Cast,cast-movie ; FILTER cast.role == "Mr. Bean" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 89 120 ------------------------------------------------------------
+Find all movies featuring " Benedict Cumberbatch "
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Benedict Cumberbatch" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Benedict Cumberbatch" ; TRAVERSAL actor-Cast-movie ; RETURN movie.title ;
+Match Status: [FIRST LF]
+-------------------- 90 121 ------------------------------------------------------------
+Who acts " Olivia Pope " in the series Scandal ?
+
+[GT] COLLECTION tv_series TvSeries ; FILTER tv_series.title == "Scandal" ; TRAVERSAL tv_series-Cast,cast-actor ; FILTER cast.role == "Olivia Pope" ; RETURN actor.name ;
+> CANDIDATE 0: COLLECTION tv_series TvSeries ; FILTER tv_series.title == "Scandal" ; TRAVERSAL tv_series-Cast,cast-actor ; FILTER cast.role == "Olivia Pope" ; RETURN actor.name ;
+Match Status: [FIRST LF]
+-------------------- 91 122 ------------------------------------------------------------
+What are the series in which " Scott Foley " is an actor ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.name == "Scott Foley" ; TRAVERSAL actor-Cast-tv_series ; RETURN tv_series.title ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.name == "Scott Foley" ; TRAVERSAL actor-Cast-tv_series ; RETURN tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 92 123 ------------------------------------------------------------
+Find all movies by directors born in " Los Angeles "
+
+[GT] COLLECTION director Director ; FILTER director.birth_city == "Los Angeles" ; TRAVERSAL director-DirectedBy-movie ; RETURN movie.title ;
+> CANDIDATE 0: COLLECTION director Director ; FILTER director.birth_city == "Los Angeles" AND director.name ;
+> CANDIDATE 1: COLLECTION director Director ; FILTER director.birth_city == "Los Angeles" AND movie.title ;
+> CANDIDATE 2: COLLECTION director Director ; FILTER director.birth_city == "Los Angeles" AND director.birth_city == "Madrid" ; RETURN movie.title ;
+> CANDIDATE 3: COLLECTION director Director ; FILTER director.birth_city == "Los Angeles" AND director.birth_city == "MadeBy-movie" ; RETURN movie.title ;
+Match Status: [NO]
+-------------------- 93 124 ------------------------------------------------------------
+How many female actors were born in " New York City " after 1980 ?
+
+[GT] COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION actor Actor ; FILTER actor.birth_city == "New York City" AND actor.birth_year > 1980 AND actor.gender == "female" ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+-------------------- 94 125 ------------------------------------------------------------
+What year is the movie " Dead Poets Society " from ?
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Dead Poets Society" ; RETURN movie.release_year ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Dead Poets Society" ; RETURN movie.release_year ;
+Match Status: [FIRST LF]
+-------------------- 95 126 ------------------------------------------------------------
+Who is the director of the series " House of Cards " produced by Netflix ?
+
+[GT] COLLECTION tv_series TvSeries ; FILTER tv_series.title == "House of Cards" ; TRAVERSAL tv_series-Copyright-company ; FILTER company.name == "Netflix" ; TRAVERSAL tv_series-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 0: COLLECTION company Company ; FILTER company.name == "House of Cards" ; TRAVERSAL company-Copyright-tv_series ; RETURN tv_series.title ;
+> CANDIDATE 1: COLLECTION tv_series TvSeries ; FILTER tv_series.title == "House of Cards" AND tv_series.title ; TRAVERSAL tv_series-DirectedBy-director ; RETURN director.name ;
+> CANDIDATE 2: COLLECTION company Company ; FILTER company.name == "House of Cards" AND tv_series.title echipei "Netflix" ; TRAVERSAL company-Copyright-tv_series ; RETURN tv_series.title ;
+> CANDIDATE 3: COLLECTION company Company ; FILTER company.name == "House of Cards" AND tv_series.title dürfte "Copyright-company" ; TRAVERSAL company-Copyright-series ; RETURN tv_series.title ;
+Match Status: [FIRST EX]
+-------------------- 96 127 ------------------------------------------------------------
+How many actors from China have acted in " Rush Hour 3 "
+
+[GT] COLLECTION movie Movie ; FILTER movie.title == "Rush Hour 3" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "China" ; AGGREGATE cnt ; RETURN cnt ;
+> CANDIDATE 0: COLLECTION movie Movie ; FILTER movie.title == "Rush Hour 3" ; TRAVERSAL movie-Cast-actor ; FILTER actor.nationality == "China" ; AGGREGATE cnt ; RETURN cnt ;
+Match Status: [FIRST LF]
+LF: 26 / 34 (0.7647), EX: 28 / 34 (0.8235)
+Average LF: 0.8283, EX: 0.8510

@@ -1,0 +1,895 @@
+Fold: 1
+-------------------- 97 1 ------------------------------------------------------------
+What company produced the movie " Juno " ?
+
+[GT] TableScan movie ; Filter movie.title = 'Juno' ; Project movie.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter movie.id = movie.id ; Return company.id ; TableScan company ; Filter company.id = company.id ; Project company.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Juno' ; Project movie.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter movie.id = movie.id ; Return company.id ; TableScan company ; Filter company.id = company.id ; Project company.name ;
+Match Status: [FIRST LF]
+-------------------- 98 2 ------------------------------------------------------------
+Find all actors who were born in 1984
+
+[GT] TableScan actor ; Filter actor.birth_year = 1984 ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_year = 1984 ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 99 3 ------------------------------------------------------------
+Who are the actors born in " New York City " after 1990 ?
+
+[GT] TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year > 1990 ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year > 1990 ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 100 4 ------------------------------------------------------------
+Find all movies about Autism
+
+[GT] TableScan movie ; Filter movie.keyword @> '["autism"]' ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.keyword @> '["autism"]' ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 101 5 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct before 2010 ?
+
+[GT] TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year < 2010 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; TableScan movie ; Filter movie.release_year > 2010 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id AND movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; TableScan movie ; Filter movie.release_year > 2010 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id AND movie.id = movie.id ; With * ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 2: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; TableScan movie ; Filter movie.release_year > 2010 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id AND movie.id = movie.id ; With COUNT ( COUNT ) AS cnt ; Return cnt ;
+> CANDIDATE 3: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; TableScan movie ; Filter movie.release_year > 2010 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id AND movie.id = movie.id ; With COUNT ( AND ) AS cnt ; Return cnt ;
+Match Status: [NO]
+-------------------- 102 6 ------------------------------------------------------------
+Find all comedies produced in year 2015
+
+[GT] TableScan movie ; Filter movie.genre @> '["Comedy"]' AND movie.release_year = 2015 ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.release_year = 2015 AND movie.genre @> '["Movie"]' ; Project movie.title ;
+> CANDIDATE 1: TableScan movie ; Filter movie.release_year = 2015 AND movie.genre JSONB '["Movie"]' ; Project movie.title ;
+> CANDIDATE 2: TableScan movie ; Filter movie.release_year = 2015 AND movie.genre = '["Movie"]' ; Project movie.title ;
+> CANDIDATE 3: TableScan movie ; Filter movie.release_year = 2015 AND movie.genre TableScan ; Project movie.title ;
+Match Status: [NO]
+-------------------- 103 7 ------------------------------------------------------------
+which movie has the most number of actors from China ?
+
+[GT] TableScan actor ; Filter actor.nationality = 'China' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With movie.id AS movie_id COUNT ( actor ) AS cnt ; Return movie_id ; OrderBy cnt DESC ; Limit 1 ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = '["China"]' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.nationality ;
+> CANDIDATE 1: Match (actor:Actor)-[r:Cast]->(movie:Movie) ; With actor.id AS actor_id COUNT ( movie ) AS cnt ; Return actor_id ; OrderBy cnt AND ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.title ;
+> CANDIDATE 2: Match (actor:Actor)-[r:Cast]->(movie:Movie) ; With actor.id AS actor_id COUNT ( movie ) AS cnt ; Return actor_id ; OrderBy cnt COUNT ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.title ;
+> CANDIDATE 3: TableScan movie ; Filter movie.title = '["China"]' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return actor.id ; OrderBy cnt AND ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.title ;
+Match Status: [NO]
+-------------------- 104 8 ------------------------------------------------------------
+When was " Kevin Spacey " born ?
+
+[GT] TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_year ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 105 9 ------------------------------------------------------------
+Find all movies featuring " Kate Winslet "
+
+[GT] TableScan actor ; Filter actor.name = 'Kate Winslet' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kate Winslet' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 106 10 ------------------------------------------------------------
+Give me the name of all the actors from Afghanistan
+
+[GT] TableScan actor ; Filter actor.nationality = 'Afghanistan' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.nationality = 'Afghanistan' ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 107 11 ------------------------------------------------------------
+Find all movies directed by " Steven Spielberg " after 2006
+
+[GT] TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2006 ; Project movie.title ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2006 ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 108 12 ------------------------------------------------------------
+Who is directed the latest movie by " NBC Universal "
+
+[GT] TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id, movie.id ; TableScan director ; TableScan movie ; Filter director.id = director.id ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project director.name ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; OrderBy director.name ;
+> CANDIDATE 1: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; OrderBy director.name ;
+> CANDIDATE 2: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; OrderBy director.name ;
+> CANDIDATE 3: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; OrderBy director.name ;
+Match Status: [NO]
+-------------------- 109 13 ------------------------------------------------------------
+find the number of actors from Iran who played in " Jim Jarmusch " movies
+
+[GT] TableScan director ; Filter director.name = 'Jim Jarmusch' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.nationality = 'Iran' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Jim Jarmusch' ; Project movie.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan director ; Filter director.nationality = 'Iran' AND director.id = director.id ; Project director.name ;
+> CANDIDATE 1: TableScan movie ; Filter movie.title = 'Jim Jarmusch' ; Project movie.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan director ; Filter director.nationality = 'Iraq' AND director.id = director.id ; Project director.name ;
+> CANDIDATE 2: TableScan movie ; Filter movie.title = 'Jim Jarmusch' ; Project movie.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.nationality = 'Iran' AND director.id = director.id ; Project director.name ;
+> CANDIDATE 3: TableScan movie ; Filter movie.title = 'Jim Jarmusch' ; Project movie.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan director ; Filter director.nationality = 'Iran' AND director.id = director.id ; Project actor.name ;
+Match Status: [NO]
+-------------------- 110 14 ------------------------------------------------------------
+Who directed the movie " Inglourious Basterds " ?
+
+[GT] TableScan movie ; Filter movie.title = 'Inglourious Basterds' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Inglourious Basterds' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [FIRST LF]
+-------------------- 111 15 ------------------------------------------------------------
+How many movies were produced in the year 2012 ?
+
+[GT] TableScan movie ; Filter movie.release_year = 2012 ; Project COUNT ( movie.title ) AS cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.release_year = 2012 ; Project COUNT ( movie.title ) AS cnt ;
+Match Status: [FIRST LF]
+-------------------- 112 16 ------------------------------------------------------------
+Find all movies written by " Matt Damon "
+
+[GT] TableScan writer ; Filter writer.name = 'Matt Damon' ; Project writer.id ; Match (movie:Movie)-[r:WrittenBy]->(writer:Writer) ; Filter writer.id = writer.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan writer ; Filter writer.name = 'Matt Damon' ; Project writer.id ; Match (movie:Movie)-[r:WrittenBy]->(writer:Writer) ; Filter writer.id = writer.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 113 17 ------------------------------------------------------------
+Find all movies that star both " Angelina Jolie " and " Brad Pitt "
+
+[GT] TableScan actor ; Filter actor.name = 'Angelina Jolie' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Angelina Jolie' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 114 18 ------------------------------------------------------------
+What is the maximum number of movies in which " Brad Pitt " act in a given year ?
+
+[GT] TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; OrderBy cnt DESC ; Limit 1 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; Project movie.release_year COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; Project movie.release_year AS ( * ) AS cnt ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; Project movie.release_year * ( * ) AS cnt ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; Project movie.release_year AND ( * ) AS cnt ;
+Match Status: [NO]
+-------------------- 115 19 ------------------------------------------------------------
+Find the actors who played in the latest movie by " Quentin Tarantino "
+
+[GT] TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter director.id = director.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; OrderBy actor.name ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; OrderBy actor.name ;
+> CANDIDATE 2: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter director.id = director.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; OrderBy actor.name ;
+> CANDIDATE 3: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter director.id = director.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; scan actor ; Filter actor.id = actor.id ; OrderBy actor.name ;
+Match Status: [NO]
+-------------------- 116 20 ------------------------------------------------------------
+Find all movies produced in 2015
+
+[GT] TableScan movie ; Filter movie.release_year = 2015 ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.release_year = 2015 ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 117 21 ------------------------------------------------------------
+What is the number of movies featuring " Brad Pitt " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 118 22 ------------------------------------------------------------
+How many movies did " Alfred Hitchcock " direct ?
+
+[GT] TableScan director ; Filter director.name = 'Alfred Hitchcock' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Alfred Hitchcock' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 119 23 ------------------------------------------------------------
+Which movie had the character " Daffy Duck "
+
+[GT] Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Daffy Duck' ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Daffy Duck' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Daffy Duck' ; Return r.role ;
+> CANDIDATE 1: TableScan movie ; Filter movie.title = 'Daffy Duck' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Daffy Duck' ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 2: TableScan movie ; Filter movie.title = 'Daffy Duck' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return r.role ;
+> CANDIDATE 3: TableScan movie ; Filter movie.title = 'Daffy Duck' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Daffy Duck' ; Return r.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [NO]
+-------------------- 120 24 ------------------------------------------------------------
+Find the directors of all movies featuring " Kate Winslet "
+
+[GT] TableScan actor ; Filter actor.name = 'Kate Winslet' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kate Winslet' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Kate Winslet' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Kevin Winslet' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Kevin Winslet' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [NO]
+-------------------- 121 25 ------------------------------------------------------------
+Find all actors who acted in the same movie as " Tom Hanks "
+
+[GT] TableScan actor ; Filter actor.name = 'Tom Hanks' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id ; Return actor_2.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Tom Hanks' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 1: TableScan movie ; Filter movie.id = movie.id ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 2: TableScan movie ; Filter movie.name = 'Tom Hanks' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 3: TableScan movie ; Filter movie.id = movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [NO]
+-------------------- 122 26 ------------------------------------------------------------
+Find all movies about Iraq war
+
+[GT] TableScan movie ; Filter movie.keyword @> '["iraq-war"]' ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.keyword @> '["iraq-war"]' ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 123 27 ------------------------------------------------------------
+How many actors were born in " Los Angeles " after 2000 ?
+
+[GT] TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_year > 2000 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_year > 2000 ; Project COUNT ( * ) AS cnt ;
+Match Status: [FIRST LF]
+-------------------- 124 28 ------------------------------------------------------------
+Find all movies produced by Netflix
+
+[GT] TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 125 29 ------------------------------------------------------------
+Where is the birth place of " Kevin Spacey "
+
+[GT] TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_city ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_city ;
+Match Status: [FIRST LF]
+-------------------- 126 30 ------------------------------------------------------------
+Find all actors from Italy
+
+[GT] TableScan actor ; Filter actor.nationality = 'Italy' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.nationality = 'Italy' ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 127 31 ------------------------------------------------------------
+Find the actor who played " Captain Miller " in the movie " Saving Private Ryan "
+
+[GT] TableScan movie ; Filter movie.title = 'Saving Private Ryan' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Captain Miller' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Saving Private Ryan' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Captain Miller' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+LF: 21 / 31 (0.6774), EX: 21 / 31 (0.6774)
+Fold: 2
+-------------------- 1 32 ------------------------------------------------------------
+Find all tv series produced by Netflix
+
+[GT] TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter company.id = company.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter company.id = company.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 2 33 ------------------------------------------------------------
+What is the number of movies produced in 2013 ?
+
+[GT] TableScan movie ; Filter release_year = 2013 ; Project COUNT ( movie.title ) AS cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.release_year = 2013 ; Project COUNT ( movie.title ) AS cnt ;
+> CANDIDATE 1: TableScan movie ; Filter movie.release_year = 2013 ; Project * ( movie.title ) AS cnt ;
+> CANDIDATE 2: TableScan movie ; Filter movie.release_year = 2013 ; Project COUNT ( movie.title ) COUNT cnt ;
+> CANDIDATE 3: TableScan movie ; Filter movie.release_year = 2013 ; Project AS ( movie.title ) AS cnt ;
+Match Status: [FIRST EX]
+-------------------- 3 34 ------------------------------------------------------------
+Find the actor with most number of films
+
+[GT] Match (actor:Actor)-[r:Cast]->(movie:Movie) ; With actor.id AS actor_id COUNT ( movie ) AS cnt ; Return actor_id ; OrderBy cnt DESC ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Cast' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With actor.id AS actor_id COUNT ( movie ) AS cnt ; Return actor_id ; OrderBy cnt DESC ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Cast' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return actor_id ; OrderBy cnt DESC ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Cast' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return actor.id ; OrderBy cnt DESC ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Actor' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With actor.id AS actor_id COUNT ( movie ) AS cnt ; Return actor_id ; OrderBy cnt DESC ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [NO]
+-------------------- 4 35 ------------------------------------------------------------
+Find all movies that were produced by Netflix
+
+[GT] TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 5 36 ------------------------------------------------------------
+How many movies about Persians were released after 1990 ?
+
+[GT] TableScan movie ; Filter movie.release_year > 1990 AND movie.keyword @> '["Persians"]' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.keyword @> '["Persians"]' AND movie.release_year > 1990 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan movie ; Filter movie.keyword @> '["persians"]' AND movie.release_year > 1990 ; Project COUNT ( COUNT ) AS cnt ;
+> CANDIDATE 2: TableScan movie ; Filter movie.keyword @> '["persians"]' AND movie.release_year > 1990 ; Project * ( * ) AS cnt ;
+> CANDIDATE 3: TableScan movie ; Filter movie.keyword @> '["persians"]' AND movie.release_year > 1990 ; Project COUNT ( AND ) AS cnt ;
+Match Status: [FIRST EX]
+-------------------- 6 37 ------------------------------------------------------------
+Find all the female actors in the movie " Saving Private Ryan "
+
+[GT] TableScan movie ; Filter movie.title = 'Saving Private Ryan' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.gender = 'female' AND actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Saving Private Ryan' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.gender = 'female' AND actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 7 38 ------------------------------------------------------------
+Find all actors from Canada who acted in " James Bond " movies
+
+[GT] TableScan movie ; Filter movie.title = 'James Bond' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.nationality = 'Canada' AND actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'James Bond' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.nationality = 'Canada' ; Project actor.name ;
+> CANDIDATE 1: TableScan movie ; Filter movie.title = 'Jim Bond' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.nationality = 'Canada' ; Project actor.name ;
+> CANDIDATE 2: TableScan movie ; Filter movie.title = 'James Bond' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.nationality = 'Canast' ; Project actor.name ;
+> CANDIDATE 3: TableScan movie ; Filter movie.title = 'James Bond' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.nationality = 'Canad ; Project actor.name ;
+Match Status: [FIRST EX]
+-------------------- 8 39 ------------------------------------------------------------
+Find all actors who are from Canada
+
+[GT] TableScan actor ; Filter actor.nationality = 'Canada' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.nationality = 'Canada' ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 9 40 ------------------------------------------------------------
+Which movies did " Alfred Hitchcock " direct ?
+
+[GT] TableScan director ; Filter director.name = 'Alfred Hitchcock' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Alfred Hitchcock' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 10 41 ------------------------------------------------------------
+How many movies did " Humphrey Bogart " act in before 1942 ?
+
+[GT] TableScan actor ; Filter actor.name = 'Humphrey Bogart' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.release_year < 1942 AND movie.id = movie.id ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Humphrey Bogart' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year DESC 1942 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Humphrey Bogart' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year AND 1942 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Humphrey Bogart' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year < 1942 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Humphrey Bogart' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year COUNT 1942 ; Project COUNT ( * ) AS cnt ;
+Match Status: [GUIDE EX]
+-------------------- 11 42 ------------------------------------------------------------
+How many movies did " Shahab Hosseini " act in
+
+[GT] TableScan actor ; Filter actor.name = 'Shahab Hosseini' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Shahab Hosseini' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 12 43 ------------------------------------------------------------
+What is the genre of the movie " Jurassic Park " ?
+
+[GT] TableScan movie ; Filter movie.title = 'Jurassic Park' ; Project JSONB_ARRAY_ELEMENTS ( movie.genre ) AS genre ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Jurassic Park' ; Project movie.genre ;
+> CANDIDATE 1: TableScan movie ; Filter movie.title = 'Jurassic Park' ; Project movie.genre ;
+> CANDIDATE 2: TableScan movie ; Filter movie.title = 'Jurisc Park' ; Project movie.genre ;
+> CANDIDATE 3: TableScan movie ; Filter movie.genre @> 'Jurassic Park' ; Project movie.title ;
+Match Status: [NO]
+-------------------- 13 44 ------------------------------------------------------------
+What is the number of movies that " Brad Pitt " acts in per year ?
+
+[GT] TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; Project movie.release_year COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; GroupBy movie.release_year ; OrderBy cnt DESC ; Limit 1 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project AND ( * ) AS cnt ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Brad Pitt' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project * ( * ) AS cnt ;
+Match Status: [NO]
+-------------------- 14 45 ------------------------------------------------------------
+Find the movie which is classified in the most number of genres
+
+[GT] TableScan movie ; Filter movie.genre IS NOT NULL ; OrderBy JSONB_ARRAY_LENGTH ASC ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.genre @> '["Movie"]' AND movie.title = '["Movie"]' AND movie.id = movie.id ; Project movie.id ; Match (movie:Movie)-[r:MadeBy]->(genre:Genre) ; Filter movie.id = movie.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 1: TableScan movie ; Filter movie.genre @> '["Movie"]' AND movie.title = '["Genre"]' ; Project movie.id ; Match (movie:Movie)-[r:MadeBy]->(genre:Genre) ; Filter movie.id = movie.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 2: TableScan movie ; Filter movie.genre @> '["Movie"]' AND movie.title = '["Greek"]' ; Project movie.id ; Match (movie:Movie)-[r:MadeBy]->(genre:Genre) ; Filter movie.id = movie.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 3: TableScan movie ; Filter movie.genre @> '["Movie"]' AND movie.title = '["Movie"]' AND movie.id = movie.id ; Project movie.id ; Match (movie:Movie)-[r:Genre]->(genre:Genre) ; Filter movie.id = movie.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [NO]
+-------------------- 15 46 ------------------------------------------------------------
+In what city was " Kevin Spacey " born ?
+
+[GT] TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_city ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_city ;
+Match Status: [FIRST LF]
+-------------------- 16 47 ------------------------------------------------------------
+List " James Bond " directors
+
+[GT] TableScan movie ; Filter movie.title = 'James Bond' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'James Bond' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [FIRST LF]
+-------------------- 17 48 ------------------------------------------------------------
+List all the Sci-Fi movies which released in 2010
+
+[GT] TableScan movie ; Filter movie.release_year = 2010 AND movie.genre @> '["Sci-Fi"]' ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.genre @> '["Sci-Fi"]' AND movie.release_year = 2010 ; Project movie.title ;
+> CANDIDATE 1: TableScan movie ; Filter movie.genre @> '["Science-Fi"]' AND movie.release_year = 2010 ; Project movie.title ;
+> CANDIDATE 2: TableScan movie ; Filter movie.genre @> '["Scientific"]' AND movie.release_year = 2010 ; Project movie.title ;
+> CANDIDATE 3: TableScan movie ; Filter movie.genre @> '["ScienceFi"]' AND movie.release_year = 2010 ; Project movie.title ;
+Match Status: [FIRST EX]
+-------------------- 18 49 ------------------------------------------------------------
+Find all movies produced by company " Walt Disney " after 2010
+
+[GT] TableScan company ; Filter company.name = 'Walt Disney' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project movie.title ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'Walt Disney' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 19 50 ------------------------------------------------------------
+What is the number of actors in the movie " Grumpier Old Men " ?
+
+[GT] TableScan movie ; Filter movie.title = 'Grumpier Old Men' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Grumpier Old Men' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 20 51 ------------------------------------------------------------
+List all the movies directed by " Asghar Farhadi " in which " Taraneh Alidoosti " played
+
+[GT] TableScan actor ; Filter actor.name = 'Taraneh Alidoosti' ; Project actor.id ; TableScan director ; Filter director.name = 'Asghar Farhadi' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Taraneh Alidoosti' ; Project actor.id ; TableScan director ; Filter director.name = 'Asghar Farhadi' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 21 52 ------------------------------------------------------------
+What are the movies related to nuclear weapons
+
+[GT] TableScan movie ; Filter movie.keyword @> '["nuclear-weapons"]' ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.keyword @> '["nuclear-weapons"]' ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 22 53 ------------------------------------------------------------
+Find all the female actors from Austin
+
+[GT] TableScan actor ; Filter actor.gender = 'female' AND actor.birth_city = 'Austin' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Austin' AND actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 1: TableScan actor ; Filter actor.birth_city = 'Austin' DESC actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.birth_city = 'Austin' COUNT actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 3: TableScan actor ; Filter actor.birth_city = 'Austin' * actor.gender = 'female' ; Project actor.name ;
+Match Status: [FIRST EX]
+-------------------- 23 54 ------------------------------------------------------------
+Who was the actor that played " Vinny Gambini " in the movie " My Cousin Vinny " ?
+
+[GT] TableScan movie ; Filter movie.title = 'My Cousin Vinny' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Vinny Gambini' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'My Cousin Vinny' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Vinny Gambini' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 24 55 ------------------------------------------------------------
+Find all the female actors born in " New York City " after 1980
+
+[GT] TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 1: TableScan actor ; Filter actor.birth_city = 'New York City' DESC actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.birth_city = 'New York City' * actor.gender = 'female' ; Project actor.name ;
+> CANDIDATE 3: TableScan actor ; Filter actor.birth_city = 'New York City' COUNT actor.gender = 'female' ; Project actor.name ;
+Match Status: [NO]
+-------------------- 25 56 ------------------------------------------------------------
+What are the series featuring " Kerry Washington " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Kerry Washington' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter actor.id = actor.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kerry Washington' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter actor.id = actor.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 26 57 ------------------------------------------------------------
+Who is the writer of the movie " Django Unchained "
+
+[GT] TableScan movie ; Filter movie.title = 'Django Unchained' ; Project movie.id ; Match (movie:Movie)-[r:WrittenBy]->(writer:Writer) ; Filter movie.id = movie.id ; Return writer.id ; TableScan writer ; Filter writer.id = writer.id ; Project writer.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Django Unchained' ; Project movie.id ; Match (movie:Movie)-[r:WrittenBy]->(writer:Writer) ; Filter movie.id = movie.id ; Return writer.id ; TableScan writer ; Filter writer.id = writer.id ; Project writer.name ;
+Match Status: [FIRST LF]
+-------------------- 27 58 ------------------------------------------------------------
+Find all movies featuring " Jason Robards " and " Woody Strode "
+
+[GT] TableScan actor ; Filter actor.name = 'Jason Robards' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Woody Strode' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Jason Robards' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Woody Strode' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 28 59 ------------------------------------------------------------
+Who is the director of the tv series " House of Cards " from 2013 ?
+
+[GT] TableScan tv_series ; Filter tv_series.title = 'House of Cards' AND tv_series.release_year = 2013 ; Project tv_series.id ; Match (tv_series:TvSeries)-[r:DirectedBy]->(director:Director) ; Filter tv_series.id = tv_series.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan tv_series ; Filter tv_series.title = 'House of Cards' AND tv_series.release_year = 2013 ; Project tv_series.id ; Match (tv_series:TvSeries)-[r:DirectedBy]->(director:Director) ; Filter tv_series.id = tv_series.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [FIRST LF]
+-------------------- 29 60 ------------------------------------------------------------
+What is the nationality of " Kevin Spacey " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.nationality ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.nationality ;
+Match Status: [FIRST LF]
+-------------------- 30 61 ------------------------------------------------------------
+Find all the directors who are from Afghanistan
+
+[GT] TableScan director ; Filter director.nationality = 'Afghanistan' ; Project director.name ;
+> CANDIDATE 0: TableScan director ; Filter director.nationality = 'Afghanistan' ; Project director.name ;
+Match Status: [FIRST LF]
+-------------------- 31 62 ------------------------------------------------------------
+How much was the budget of " Finding Nemo "
+
+[GT] TableScan movie ; Filter movie.title = 'Finding Nemo' ; Project movie.budget ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Finding Nemo' ; Project movie.budget ;
+Match Status: [FIRST LF]
+LF: 20 / 31 (0.6452), EX: 26 / 31 (0.8387)
+Fold: 3
+-------------------- 32 63 ------------------------------------------------------------
+In what year was " Benedict Cumberbatch " born
+
+[GT] TableScan actor ; Filter actor.name = 'Benedict Cumberbatch' ; Project actor.birth_year ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Benedict Cumberbatch' ; Project actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 33 64 ------------------------------------------------------------
+How many movies are there that are directed by " Steven Spielberg " and featuring " Matt Damon " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project * ( * ) AS cnt ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project AS ( * ) AS cnt ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project AND ( * ) AS cnt ;
+Match Status: [FIRST EX]
+-------------------- 34 65 ------------------------------------------------------------
+Find the actors who played in the movie " Camp X-Ray "
+
+[GT] TableScan movie ; Filter movie.title = 'Camp X-Ray' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Camp X-Ray' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 35 66 ------------------------------------------------------------
+Find all movies about Persians
+
+[GT] TableScan movie ; Filter movie.keyword @> '["persians"]' ; Project movie.title ;
+> CANDIDATE 0: TableScan movie ; Filter movie.keyword @> '["Persians"]' ; Project movie.title ;
+> CANDIDATE 1: TableScan movie ; Filter movie.keyword OrderBy '["Persians"]' ; Project movie.title ;
+> CANDIDATE 2: TableScan movie ; Filter movie.keyword JSONB '["Persians"]' ; Project movie.title ;
+> CANDIDATE 3: TableScan movie ; Filter movie.keyword TableScan '["Persians"]' ; Project movie.title ;
+Match Status: [FIRST EX]
+-------------------- 36 67 ------------------------------------------------------------
+What are all the tv series created by " Shonda Rhimes " ?
+
+[GT] TableScan producer ; Filter producer.name = 'Shonda Rhimes' ; Project producer.id ; Match (tv_series:TvSeries)-[r:MadeBy]->(producer:Producer) ; Filter producer.id = producer.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+> CANDIDATE 0: TableScan producer ; Filter producer.name = 'Shonda Rhimes' ; Project producer.id ; Match (tv_series:TvSeries)-[r:MadeBy]->(producer:Producer) ; Filter producer.id = producer.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 37 68 ------------------------------------------------------------
+Which producer has worked with the most number of directors ?
+
+[GT] Match (movie:Movie)-[:MadeBy]->(producer:Producer), (movie:Movie)-[:DirectedBy]->(director:Director) ; With producer.id AS producer_id COUNT ( director ) AS cnt ; Return producer_id ; OrderBy cnt DESC ; Limit 1 ; TableScan producer ; Filter producer.id = producer.id ; Project producer.name ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Woody' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With producer.id AS producer.id COUNT ( producer.id ; Return producer.id ; OrderBy cnt DESC ; Limit 1 ; TableScan producer ; Filter producer.id = producer.id ; Project producer.name ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Woody' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With producer.id AS producer.id COUNT ( producer ) AS cnt ; Return producer.id ; OrderBy cnt DESC ; Limit 1 ; TableScan producer ; Filter producer.id = producer.id ; Project producer.name ;
+> CANDIDATE 2: TableScan director ; Filter director.name = 'Woody' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With producer.id AS producer.id COUNT ( producer ) AS cnt ; Return cnt ; OrderBy cnt DESC ; Limit 1 ; TableScan cnt DESC ; Filter producer.id = producer.id ; Project producer.name ;
+> CANDIDATE 3: TableScan director ; Filter director.name = 'Woody' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With producer.id AS producer.id COUNT ( producer ) AS cnt ; Return cnt ; OrderBy cnt DESC ; Limit 1 ; TableScan cnt AND ; Filter producer.id = producer.id ; Project producer.name ;
+Match Status: [NO]
+-------------------- 38 69 ------------------------------------------------------------
+find all films in which " Rowan Atkinson " acted as " Mr. Bean "
+
+[GT] TableScan actor ; Filter actor.name = 'Rowan Atkinson' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id AND r.role = 'Mr. Bean' ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Rowan Atkinson' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Mr. Bean' ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Rowan Atkinson' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Mr. Bean' ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Rowan Atkinson' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Rowan Atkinson' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [NO]
+-------------------- 39 70 ------------------------------------------------------------
+Who acted " John Nash " in the movie " A Beautiful Mind " ?
+
+[GT] TableScan movie ; Filter movie.title = 'A Beautiful Mind' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'John Nash' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'A Beautiful Mind' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'John Nash' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 40 71 ------------------------------------------------------------
+How many movies did " Steven Spielberg " direct ?
+
+[GT] TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Steven Spielberg' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 41 72 ------------------------------------------------------------
+where is the director of " The Past " from
+
+[GT] TableScan movie ; Filter movie.title = 'The Past' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.birth_city ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'The Past' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.birth_city ;
+Match Status: [FIRST LF]
+-------------------- 42 73 ------------------------------------------------------------
+What are all the movies featuring " Kerry Washington " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Kerry Washington' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kerry Washington' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 43 74 ------------------------------------------------------------
+Find all movies produced by producer " Walt Disney " after 2010
+
+[GT] TableScan producer ; Filter producer.name = 'Walt Disney' ; Project producer.id ; Match (movie:Movie)-[r:MadeBy]->(producer:Producer) ; Filter producer.id = producer.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project movie.title ;
+> CANDIDATE 0: TableScan producer ; Filter producer.name = 'Walt Disney' ; Project producer.id ; Match (movie:Movie)-[r:MadeBy]->(producer:Producer) ; Filter producer.id = producer.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 44 75 ------------------------------------------------------------
+What is the number of movies in which " Tom Cruise " acted ?
+
+[GT] TableScan actor ; Filter actor.name = 'Tom Cruise' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Tom Cruise' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 45 76 ------------------------------------------------------------
+How many companies participated in producing " Camp X-Ray "
+
+[GT] TableScan movie ; Filter movie.title = 'Camp X-Ray' ; Project movie.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Camp X-Ray' ; Project movie.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 46 77 ------------------------------------------------------------
+which company funded the " Mickey Mouse " series
+
+[GT] TableScan tv_series ; Filter tv_series.title = 'Mickey Mouse' ; Project tv_series.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return company.id ; TableScan company ; Filter company.id = company.id ; Project company.name ;
+> CANDIDATE 0: TableScan tv_series ; Filter tv_series.title = 'Mickey Mouse' ; Project tv_series.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return company.id ; TableScan company ; Filter company.id = company.id ; Project company.name ;
+Match Status: [FIRST LF]
+-------------------- 47 78 ------------------------------------------------------------
+Find all actors born in " Los Angeles " after 1980
+
+[GT] TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_year > 1980 ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 48 79 ------------------------------------------------------------
+Who acted in the most number of movies directed by " Jim Jarmusch "
+
+[GT] TableScan director ; Filter director.name = 'Jim Jarmusch' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With actor.id AS actor_id COUNT ( movie ) AS cnt ; Return actor_id ; OrderBy cnt ASC ; Limit 1 ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Jim Jarmusch' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Jim Jarmusch' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Jim Jarmusch' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND director.id ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Jim Jarmusch' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.id ; Project COUNT ( * ) AS cnt ;
+Match Status: [NO]
+-------------------- 49 80 ------------------------------------------------------------
+How many movies did " Ronald Reagan " act in ?
+
+[GT] TableScan actor ; Filter actor.name = 'Ronald Reagan' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Ronald Reagan' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 50 81 ------------------------------------------------------------
+Find all movies featuring both " Matt Damon " and " Ben Affleck "
+
+[GT] TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Ben Affleck' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Matt Damon' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Ben Affleck' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 51 82 ------------------------------------------------------------
+List all the directors of movies about nuclear weapons
+
+[GT] TableScan movie ; Filter movie.keyword @> '["nuclear-weapons"]' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan director ; Filter director.name = '["nuclear-weapons"]' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 1: TableScan director ; Filter director.name = '["nuclear-weapons"]' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 2: TableScan movie ; Filter movie.keyword @> '["nuclear-weapons"]' ; Project movie.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 3: TableScan movie ; Filter movie.keyword @> '["nuclear-weapons"]' ; Project movie.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [GUIDE EX]
+-------------------- 52 83 ------------------------------------------------------------
+How many actors are in the movie " Saving Private Ryan " ?
+
+[GT] TableScan movie ; Filter movie.title = 'Saving Private Ryan' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Saving Private Ryan' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 53 84 ------------------------------------------------------------
+Find all actors who were born in " New York City " in 1984
+
+[GT] TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year = 1984 ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year = 1984 ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 54 85 ------------------------------------------------------------
+Who is the writer of " The Truman Show "
+
+[GT] TableScan movie ; Filter movie.title = 'The Truman Show' ; Project movie.id ; Match (movie:Movie)-[r:WrittenBy]->(writer:Writer) ; Filter movie.id = movie.id ; Return writer.id ; TableScan writer ; Filter writer.id = writer.id ; Project writer.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'The Truman Show' ; Project movie.id ; Match (movie:Movie)-[r:WrittenBy]->(writer:Writer) ; Filter movie.id = movie.id ; Return writer.id ; TableScan writer ; Filter writer.id = writer.id ; Project writer.name ;
+Match Status: [FIRST LF]
+-------------------- 55 86 ------------------------------------------------------------
+Who acts as " Alan Turing " in the movie " The Imitation Game " ?
+
+[GT] TableScan movie ; Filter movie.title = 'The Imitation Game' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Alan Turing' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'The Imitation Game' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Alan Turing' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 56 87 ------------------------------------------------------------
+Find all movies in which " Robin Wright " appears
+
+[GT] TableScan actor ; Filter actor.name = 'Robin Wright' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Robin Wright' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 57 88 ------------------------------------------------------------
+what are the genres of movies directed by " Asghar Farhadi "
+
+[GT] TableScan director ; Filter director.name = 'Asghar Farhadi' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project JSONB_ARRAY_ELEMENTS ( movie.genre ) AS genre ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Asghar Farhadi' ; Project actor.id ; Match (actor:Actor)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return genre.id ; TableScan genre ; Filter genre.id = genre.id ; Project genre.genre ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Asghar Farhadi' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return genre.id ; TableScan genre ; Filter genre.id = genre.id ; Project genre.genre ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Asghar Farhadi' ; Project actor.id ; Match (actor:Actor)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return genre.id ; TableScan genre ; Filter genre.id = genre.id ; OrderBy genre.genre ; Limit 1 ; Project genre.genre ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Asghar Farhadi' ; Project actor.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id ; Return genre.id ; TableScan genre ; Filter genre.id = genre.id ; Project Genre.genre ;
+Match Status: [NO]
+-------------------- 58 89 ------------------------------------------------------------
+Who is the director of the movie " Catch Me If You Can " ?
+
+[GT] TableScan movie ; Filter movie.title = 'Catch Me If You Can' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Catch Me If You Can' ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [FIRST LF]
+-------------------- 59 90 ------------------------------------------------------------
+What is the nationality of the actress " Ellen Page " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Ellen Page' ; Project actor.nationality ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Ellen Page' ; Project actor.nationality ;
+Match Status: [FIRST LF]
+-------------------- 60 91 ------------------------------------------------------------
+Who was the director of the movie " Joy " from 2015 ?
+
+[GT] TableScan movie ; Filter movie.title = 'Joy' AND movie.release_year = 2015 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Joy' AND movie.release_year = 2015 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter movie.id = movie.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [FIRST LF]
+-------------------- 61 92 ------------------------------------------------------------
+How many movies did Netflix produce ?
+
+[GT] TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 62 93 ------------------------------------------------------------
+What year was the movie " The Imitation Game " produced
+
+[GT] TableScan movie ; Filter movie.title = 'The Imitation Game' ; Project movie.release_year ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'The Imitation Game' ; Project movie.release_year ;
+Match Status: [FIRST LF]
+LF: 24 / 31 (0.7742), EX: 27 / 31 (0.8710)
+Fold: 4
+-------------------- 63 94 ------------------------------------------------------------
+How many movies about Iraq war were produced in 2015 ?
+
+[GT] TableScan movie ; Filter movie.keyword @> '["iraq-war"]' AND movie.release_year = 2015 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.release_year = 2015 AND movie.keyword @> '["iraq-war"]' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan movie ; Filter movie.release_year = 2015 AND movie.keyword @> '["Iraq-war"]' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 2: TableScan movie ; Filter movie.release_year = 2015 AND movie.keyword @> '["Iraq-War"]' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 3: TableScan movie ; Filter movie.release_year = 2015 AND movie.keyword @> '["iraq-war"]' ; Project COUNT ( COUNT ) AS cnt ;
+Match Status: [FIRST EX]
+-------------------- 64 95 ------------------------------------------------------------
+What are the major roles in the movie " Daddy Long Legs "
+
+[GT] TableScan movie ; Filter movie.title = 'Daddy Long Legs' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return r.role ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Daddy Long Legs' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Daddy Long Legs' ; Return r.role ; TableScan r.role ; Filter r.role = 'Daddy Long Legs' AND movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 1: TableScan movie ; Filter movie.title = 'Daddy Long Legs' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Danny Long Legs' ; Return r.role ; TableScan r.role ; Filter r.role = 'Danny Long Legs' AND movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 2: TableScan movie ; Filter movie.title = 'Daddy Long Legs' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Daddy Long Legs' ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.title ;
+> CANDIDATE 3: TableScan movie ; Filter movie.title = 'Daddy Long Legs' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Baby' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.title ;
+Match Status: [NO]
+-------------------- 65 96 ------------------------------------------------------------
+What was the budget of the movie Juno from 2007 ?
+
+[GT] TableScan movie ; Filter movie.title = 'Juno' AND movie.release_year = 2007 ; Project movie.budget ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Juno' AND movie.release_year = 2007 ; Project movie.budget ;
+Match Status: [FIRST LF]
+-------------------- 66 97 ------------------------------------------------------------
+What is the latest movie by " Jim Jarmusch "
+
+[GT] TableScan director ; Filter director.name = 'Jim Jarmusch' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Jim Jarmusch' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Jim Jarmusch' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+Match Status: [GUIDE LF]
+-------------------- 67 98 ------------------------------------------------------------
+Find all actors born in Milan
+
+[GT] TableScan actor ; Filter actor.birth_city = 'Milan' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Milan' ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 68 99 ------------------------------------------------------------
+Find the name and budget of the latest movie by " Quentin Tarantino "
+
+[GT] TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year ASC ; Limit 1 ; Project movie.title movie.budget ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year AND ; Limit 1 ; Project movie.title ;
+> CANDIDATE 2: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year COUNT ; Limit 1 ; Project movie.title ;
+> CANDIDATE 3: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+Match Status: [NO]
+-------------------- 69 100 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct after 2010 ?
+
+[GT] TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; TableScan movie ; Filter movie.release_year > 2010 ; Project movie.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id AND movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project COUNT ( COUNT ) AS cnt ;
+> CANDIDATE 2: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project COUNT ( AND ) AS cnt ;
+> CANDIDATE 3: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project * ( * ) AS cnt ;
+Match Status: [NO]
+-------------------- 70 101 ------------------------------------------------------------
+What year was " Ellen Page " born ?
+
+[GT] TableScan actor ; Filter actor.name = 'Ellen Page' ; Project actor.birth_year ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Ellen Page' ; Project actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 71 102 ------------------------------------------------------------
+How many movies did " Matt Damon " direct ?
+
+[GT] TableScan director ; Filter director.name = 'Matt Damon' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Matt Damon' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+Match Status: [FIRST LF]
+-------------------- 72 103 ------------------------------------------------------------
+Find all movies featuring " Kevin Spacey "
+
+[GT] TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 73 104 ------------------------------------------------------------
+Find the latest movie which " Gabriele Ferzetti " acted in
+
+[GT] TableScan actor ; Filter actor.name = 'Gabriele Ferzetti' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Gabriel Ferzetti' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Gabriel Ferzetti' ; Project actor.id ; Match (movie:Movie)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year DESC ; Limit 1 ; Project movie.title ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Gabriel Ferzetti' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year COUNT ; Limit 1 ; Project movie.title ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Gabriel Ferzetti' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; OrderBy movie.release_year AND ; Limit 1 ; Project movie.title ;
+Match Status: [NO]
+-------------------- 74 105 ------------------------------------------------------------
+Find all actors from Italy born after 1980
+
+[GT] TableScan actor ; Filter actor.birth_year > 1980 AND actor.nationality = 'Italy' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_year > 1980 AND actor.nationality = 'Italy' ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 75 106 ------------------------------------------------------------
+Find all movies directed by " Woody Allen " and featuring " Scarlett Johansson "
+
+[GT] TableScan actor ; Filter actor.name = 'Scarlett Johansson' ; Project actor.id ; TableScan director ; Filter director.name = 'Woody Allen' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Scarlett Johansson' ; Project actor.id ; TableScan director ; Filter director.name = 'Woody Allen' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 76 107 ------------------------------------------------------------
+What is the nationality of the actor " Christoph Waltz " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Christoph Waltz' ; Project actor.nationality ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Christoph Waltz' ; Project actor.nationality ;
+Match Status: [FIRST LF]
+-------------------- 77 108 ------------------------------------------------------------
+Find all actors from Austin born after 1980
+
+[GT] TableScan actor ; Filter actor.birth_city = 'Austin' AND actor.birth_year > 1980 ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Austin' AND actor.birth_year > 1980 ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 78 109 ------------------------------------------------------------
+Find all movies featuring " Benedict Cumberbatch " and " Keira Knightley "
+
+[GT] TableScan actor ; Filter actor.name = 'Benedict Cumberbatch' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Keira Knightley' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Benedict Cumberbatch' ; Project actor.id ; TableScan actor ; Filter actor.name = 'Keira Knightley' ; Project actor.id ; Match (actor_1:Actor)-[:Cast]->(movie:Movie), (actor_2:Actor)-[:Cast]->(movie:Movie) ; Filter actor_1.id = actor_1.id AND actor_2.id = actor_2.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 79 110 ------------------------------------------------------------
+Find all actors born in " Los Angeles "
+
+[GT] TableScan actor ; Filter actor.birth_city = 'Los Angeles' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_city = 'Los Angeles' ; Project actor.name ;
+> CANDIDATE 1: TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_year = 'Los Angeles' ; Project actor.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.birth_city = 'Los Angeles' * actor.birth_city = 'Los Angeles' ; Project actor.name ;
+> CANDIDATE 3: TableScan actor ; Filter actor.birth_city = 'Los Angeles' AND actor.birth_year = '1996 ; Project actor.name ;
+Match Status: [FIRST EX]
+-------------------- 80 111 ------------------------------------------------------------
+In what year was " Kevin Spacey " born ?
+
+[GT] TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_year ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Kevin Spacey' ; Project actor.birth_year ;
+Match Status: [FIRST LF]
+-------------------- 81 112 ------------------------------------------------------------
+How many movies did " Quentin Tarantino " direct after 2002 and before 2010 ?
+
+[GT] TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year < 2010 AND movie.release_year > 2002 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2002 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 1: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year AND 2002 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 2: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year DESC 2002 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 3: TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year COUNT 2002 ; Project COUNT ( * ) AS cnt ;
+Match Status: [NO]
+-------------------- 82 113 ------------------------------------------------------------
+What are all the movies directed by " Quentin Tarantino " featuring " Christoph Waltz " ?
+
+[GT] TableScan actor ; Filter actor.name = 'Christoph Waltz' ; Project actor.id ; TableScan director ; Filter director.name = 'Quentin Tarantino' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Quentin Tarantino' ; Project actor.id ; TableScan director ; Filter director.name = 'Chris Waltz' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Quentin Tarantino' ; Project actor.id ; TableScan director ; Filter director.name = 'Schust Waltz' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Quentin Tarantino' ; Project actor.id ; TableScan director ; Filter director.name = 'Schutt Waltz' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Quentin Tarantino' ; Project actor.id ; TableScan director ; Filter director.name = 'Chroix Waltz' ; Project director.id ; Match (actor:Actor)-[:Cast]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter actor.id = actor.id AND director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [NO]
+-------------------- 83 114 ------------------------------------------------------------
+List all male directors who worked with the " NBC Universal " company
+
+[GT] TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.gender = 'male' AND director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (company:Company)-[r:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.gender = 'female' AND director.id = director.id ; Project director.name ;
+> CANDIDATE 1: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 2: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (movie:Movie)-[:DirectedBy]->(director:Director), (company:Company)-[:Copyright]->(movie:Movie) ; Filter company.id = company.id ; Return director.id, movie.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 3: TableScan company ; Filter company.name = 'NBC Universal' ; Project company.id ; Match (company:Company)-[:Copyright]->(movie:Movie), (movie:Movie)-[:DirectedBy]->(director:Director) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [NO]
+-------------------- 84 115 ------------------------------------------------------------
+What company produced the series Scandal ?
+
+[GT] TableScan tv_series ; Filter tv_series.title = 'Scandal' ; Project tv_series.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return company.id ; TableScan company ; Filter company.id = company.id ; Project company.name ;
+> CANDIDATE 0: TableScan tv_series ; Filter tv_series.title = 'Scandal' ; Project tv_series.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return company.id ; TableScan company ; Filter company.id = company.id ; Project company.name ;
+Match Status: [FIRST LF]
+-------------------- 85 116 ------------------------------------------------------------
+Who is the actor playing " Alan Turing " in " The Imitation Game " ?
+
+[GT] TableScan movie ; Filter movie.title = 'The Imitation Game' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Alan Turing' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'The Imitation Game' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Alan Turing' AND movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 86 117 ------------------------------------------------------------
+What is the number of movies in which " Jennifer Aniston " acted after 2010 ?
+
+[GT] TableScan actor ; Filter actor.name = 'Jennifer Aniston' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Jennifer Aniston' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id AND movie.release_year > 2010 ; Project COUNT ( * ) AS cnt ;
+Match Status: [FIRST LF]
+-------------------- 87 118 ------------------------------------------------------------
+Which actors were born in Tehran
+
+[GT] TableScan actor ; Filter actor.birth_city = 'Tehran' ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'Tehran' ; Project actor.name ;
+Match Status: [FIRST LF]
+-------------------- 88 119 ------------------------------------------------------------
+who acted the role of " Mr. Bean "
+
+[GT] Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter r.role = 'Mr. Bean' ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Mr. Bean' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Role) ; Filter actor.id = actor.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 1: TableScan actor ; Filter actor.name = 'Mr. Bean' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Role) ; Filter actor.id = actor.id ; Return r.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 2: TableScan actor ; Filter actor.name = 'Mr. Bean' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 3: TableScan actor ; Filter actor.name = 'Mr. Bean' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Role) ; Filter actor.id = actor.id ; Return r.role ; TableScan r.role = 'mr. Bean' ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [NO]
+-------------------- 89 120 ------------------------------------------------------------
+Find all movies featuring " Benedict Cumberbatch "
+
+[GT] TableScan actor ; Filter actor.name = 'Benedict Cumberbatch' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Benedict Cumberbatch' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter actor.id = actor.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 90 121 ------------------------------------------------------------
+Who acts " Olivia Pope " in the series Scandal ?
+
+[GT] TableScan tv_series ; Filter tv_series.title = 'Scandal' ; Project tv_series.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter r.role = 'Olivia Pope' AND tv_series.id = tv_series.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 0: TableScan tv_series ; Filter tv_series.title = 'Scandal' ; Project tv_series.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 1: TableScan tv_series ; Filter tv_series.title = 'Scandal' ; Project tv_series.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter r.role = 'Oloy Pope' AND r.role = 'Id = tv_series.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 2: TableScan tv_series ; Filter tv_series.title = 'Scandal' ; Project tv_series.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter r.role = 'Oloy Pope' AND ( * ) AS cnt ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+> CANDIDATE 3: TableScan tv_series ; Filter tv_series.title = 'Scandale' ; Project tv_series.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id ; Project actor.name ;
+Match Status: [NO]
+-------------------- 91 122 ------------------------------------------------------------
+What are the series in which " Scott Foley " is an actor ?
+
+[GT] TableScan actor ; Filter actor.name = 'Scott Foley' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter actor.id = actor.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+> CANDIDATE 0: TableScan actor ; Filter actor.name = 'Scott Foley' ; Project actor.id ; Match (actor:Actor)-[r:Cast]->(tv_series:TvSeries) ; Filter actor.id = actor.id ; Return tv_series.id ; TableScan tv_series ; Filter tv_series.id = tv_series.id ; Project tv_series.title ;
+Match Status: [FIRST LF]
+-------------------- 92 123 ------------------------------------------------------------
+Find all movies by directors born in " Los Angeles "
+
+[GT] TableScan director ; Filter director.birth_city = 'Los Angeles' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+> CANDIDATE 0: TableScan director ; Filter director.birth_city = 'Los Angeles' ; Project director.id ; Match (movie:Movie)-[r:DirectedBy]->(director:Director) ; Filter director.id = director.id ; Return movie.id ; TableScan movie ; Filter movie.id = movie.id ; Project movie.title ;
+Match Status: [FIRST LF]
+-------------------- 93 124 ------------------------------------------------------------
+How many female actors were born in " New York City " after 1980 ?
+
+[GT] TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan actor ; Filter actor.birth_city = 'New York City' AND actor.birth_year > 1980 AND actor.gender = 'female' ; Project COUNT ( * ) AS cnt ;
+Match Status: [FIRST LF]
+-------------------- 94 125 ------------------------------------------------------------
+What year is the movie " Dead Poets Society " from ?
+
+[GT] TableScan movie ; Filter movie.title = 'Dead Poets Society' ; Project movie.release_year ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Dead Poets Society' ; Project movie.release_year ;
+Match Status: [FIRST LF]
+-------------------- 95 126 ------------------------------------------------------------
+Who is the director of the series " House of Cards " produced by Netflix ?
+
+[GT] TableScan tv_series ; Filter tv_series.title = 'House of Cards' ; Project tv_series.id ; TableScan producer ; Filter producer.name = 'Netflix' ; Project producer.id ; Match (tv_series:TvSeries)-[:DirectedBy]->(director:Director), (tv_series:TvSeries)-[:MadeBy]->(producer:Producer) ; Filter tv_series.id = tv_series.id AND producer.id = producer.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 0: TableScan tv_series ; Filter tv_series.title = 'House of Cards' AND tv_series.id = tv_series.id ; Project tv_series.id ; Match (company:Company)-[r:Copyright]->(tv_series.id = tv_series.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 1: TableScan tv_series ; Filter tv_series.title = 'House of Cards' AND tv_series.id = tv_series.id ; Project tv_series.id ; Match (company:Company)-[r:Copyright]->(tv_series:TvSeries) ; Filter tv_series.id = tv_series.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 2: TableScan tv_series ; Filter tv_series.title = 'House of Cards' AND tv_series.id = tv_series.id ; Project tv_series.id ; Match (company:Company)-[r:DirectedBy]->(director:Director) ; Filter tv_series.id = tv_series.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+> CANDIDATE 3: TableScan company ; Filter company.name = 'Netflix' ; Project company.id ; Match (tv_series:TvSeries)-[r:DirectedBy]->(director:Director) ; Filter company.id = company.id ; Return director.id ; TableScan director ; Filter director.id = director.id ; Project director.name ;
+Match Status: [FIRST EX]
+-------------------- 96 127 ------------------------------------------------------------
+How many actors from China have acted in " Rush Hour 3 "
+
+[GT] TableScan movie ; Filter movie.title = 'Rush Hour 3' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; Return actor.id ; TableScan actor ; Filter actor.id = actor.id AND actor.nationality = 'China' ; Project COUNT ( * ) AS cnt ;
+> CANDIDATE 0: TableScan movie ; Filter movie.title = 'Rush Hour 3' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 1: TableScan movie ; Filter movie.title = 'Rush Hour 3' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( COUNT ) AS cnt ; Return cnt ;
+> CANDIDATE 2: TableScan movie ; Filter movie.title = 'Rush Hour 3' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With * ( * ) AS cnt ; Return cnt ;
+> CANDIDATE 3: TableScan movie ; Filter movie.title = 'Rush Hour 3' ; Project movie.id ; Match (actor:Actor)-[r:Cast]->(movie:Movie) ; Filter movie.id = movie.id ; With COUNT ( AND ) AS cnt ; Return cnt ;
+Match Status: [NO]
+LF: 21 / 34 (0.6176), EX: 24 / 34 (0.7059)
+Average LF: 0.6786, EX: 0.7732
